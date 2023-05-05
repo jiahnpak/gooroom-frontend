@@ -1,6 +1,7 @@
 const colors = {
   primary: '#6A5ACD',
   white: '#FBFBFB',
+  lightgray: '#AFB1B6',
   btnBorder: '#D4D2E3',
   textDefault: '#5D5A88',
 };

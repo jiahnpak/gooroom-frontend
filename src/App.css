@@ -4,3 +4,9 @@
   font-weight: 300;
   font-style: normal;
 }
+
+@font-face {
+  font-family: DefaultFont;
+  src: url('assets/fonts/NotoSansKR-Regular.otf');
+  font-style: normal;
+}
