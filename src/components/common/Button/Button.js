@@ -54,4 +54,8 @@ const Button = ({children, variant, ...rest}) => {
   );
 };
 
+Button.defaultProps = {
+  variant: 'primary',
+};
+
 export default Button;
