@@ -33,7 +33,7 @@ const LoginPage = () => {
       </Form>
 
       <Card.Text className="mb-5 text-center">
-        <Link to="/users/email">회원가입하기</Link>
+        <Link to="/signup">회원가입하기</Link>
       </Card.Text>
     </AuthForm>
   );

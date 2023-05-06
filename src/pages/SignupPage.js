@@ -34,6 +34,11 @@ const SignupPage = () => {
         </Form.Group>
 
         <Form.Group className="mb-5 text-start">
+          <Form.Label>닉네임</Form.Label>
+          <Form.Control type="text" placeholder="닉네임을 입력해주세요." />
+        </Form.Group>
+
+        <Form.Group className="mb-5 text-start">
           <Form.Label>전화번호</Form.Label>
           <div className="d-grid">
             <Button variant="secondary">전화번호 인증하기</Button>
