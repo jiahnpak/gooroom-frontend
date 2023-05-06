@@ -38,6 +38,12 @@ const variantStyles = css`
       &:focus-visible {
         outline: 0;
       }
+
+      &:disabled {
+        color: ${selected.font};
+        background: ${selected.background};
+        border: 1px solid ${selected.border};
+      }
     `;
   }}
 `;

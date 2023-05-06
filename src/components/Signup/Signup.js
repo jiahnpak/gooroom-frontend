@@ -1,88 +1,62 @@
-import {Form} from 'react-bootstrap';
 import AuthForm from 'components/common/AuthForm';
-import Button from 'components/common/Button';
-import ModalButton from './ModalButton';
+import {postSignup} from 'apis/auth';
+import SignupForm from './SignupForm';
+import {useForm} from 'react-hook-form';
+import {yupResolver} from '@hookform/resolvers/yup';
+import {ERRORS, validationSchema} from './validationSchema';
+import {useNavigate} from 'react-router-dom';
 
 const Signup = ({title}) => {
+  // 회원가입 폼에서 필드의 값과 유효성 검증을 위해 사용
+  const formMethods = useForm({
+    resolver: yupResolver(validationSchema),
+  });
+  const {setError, watch} = formMethods;
+
+  console.log(watch('phonenumber'));
+
+  // 페이지 이동을 위해 사용
+  const navigate = useNavigate();
+
+  /**
+   * 회원가입 폼에서 submit 이벤트가 발생하고 모든 필드가 유효한 경우 수행되는 함수이다.
+   * @param {object} data - react-hook-form을 통해 관리하는 필드의 값이다.
+   */
+  const onSubmit = data => {
+    const {email, password, name, nickname, phonenumber} = data;
+    const body = JSON.stringify({
+      email,
+      password,
+      name,
+      nickname,
+      phonenumber,
+    });
+
+    try {
+      const response = postSignup(body);
+      const responseJson = JSON.parse(response);
+
+      if (!responseJson.errorCode) {
+        // 에러 코드가 없는 경우, 회원가입 성공
+        navigate('/login');
+      } else if (responseJson.errorCode === 409) {
+        setError('email', {type: 'custom', message: ERRORS.DUPLICATE_EMAIL});
+      }
+    } catch (err) {}
+  };
+
+  const onInvalid = errors => {};
+
   return (
-    <AuthForm title={title}>
-      <Form className="mb-5">
-        <Form.Group className="mb-5 text-start">
-          <Form.Label>이메일</Form.Label>
-          <Form.Control type="email" placeholder="이메일을 입력해주세요." />
-        </Form.Group>
-
-        <Form.Group className="mb-5 text-start">
-          <Form.Label>비밀번호</Form.Label>
-          <Form.Control
-            type="password"
-            placeholder="숫자와 영문자를 포함한 O~O자"
-          />
-        </Form.Group>
-
-        <Form.Group className="mb-5 text-start">
-          <Form.Label>비밀번호 확인</Form.Label>
-          <Form.Control
-            type="password"
-            placeholder="비밀번호를 다시 입력해주세요."
-          />
-        </Form.Group>
-
-        <Form.Group className="mb-5 text-start">
-          <Form.Label>이름</Form.Label>
-          <Form.Control type="text" placeholder="이름을 입력해주세요." />
-        </Form.Group>
-
-        <Form.Group className="mb-5 text-start">
-          <Form.Label>닉네임</Form.Label>
-          <Form.Control type="text" placeholder="닉네임을 입력해주세요." />
-        </Form.Group>
-
-        <Form.Group className="mb-5 text-start">
-          <Form.Label>전화번호</Form.Label>
-          <div className="d-grid">
-            <Button variant="secondary">전화번호 인증하기</Button>
-          </div>
-        </Form.Group>
-
-        <Form.Group className="text-start" controlId="formCheckAll">
-          <Form.Check type="checkbox" id="checkAll" label="전체 동의" />
-        </Form.Group>
-
-        <hr />
-
-        <Form.Group className="mb-2" controlId="formCheckOption1">
-          <Form.Check type="checkbox" id="check-option1">
-            <Form.Check.Input type="checkbox" />
-            <Form.Check.Label>이용약관 동의</Form.Check.Label>
-            <Form.Text className="d-inline">
-              <ModalButton>?</ModalButton>
-            </Form.Text>
-          </Form.Check>
-        </Form.Group>
-
-        <Form.Group className="mb-5" controlId="formCheckOption2">
-          <Form.Check type="checkbox" id="check-option2">
-            <Form.Check.Input type="checkbox" />
-            <Form.Check.Label>개인정보 수집 및 동의</Form.Check.Label>
-            <Form.Text className="d-inline">
-              <ModalButton>?</ModalButton>
-            </Form.Text>
-          </Form.Check>
-        </Form.Group>
-
-        <div className="d-grid">
-          <Button
-            variant="primary"
-            type="submit"
-            size="lg"
-            style={{fontSize: '1rem'}}
-          >
-            시작하기
-          </Button>
-        </div>
-      </Form>
-    </AuthForm>
+    <>
+      <AuthForm title={title}>
+        <SignupForm
+          formMethods={formMethods}
+          onSubmit={onSubmit}
+          onInvalid={onInvalid}
+        ></SignupForm>
+      </AuthForm>
+    </>
   );
 };
 
