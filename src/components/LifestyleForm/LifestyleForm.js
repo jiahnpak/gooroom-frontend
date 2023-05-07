@@ -1,86 +1,194 @@
-import {Form} from 'react-bootstrap';
-import {StyledForm, StyledFormItem} from './styles';
+import {Alert, Form} from 'react-bootstrap';
+import {StyledForm, StyledFormItem, StyledFormItemPositioner} from './styles';
+import {useForm} from 'react-hook-form';
+import {
+  smokingType,
+  drinkingType,
+  sleepingHabitType,
+  wakeupTime,
+  organizeType,
+  cleanupType,
+  introduce,
+} from './itemList';
+import Button from 'components/common/Button/Button';
+import {yupResolver} from '@hookform/resolvers/yup';
+import {validationSchema} from './validationSchema';
+import useInterceptedAxios from 'hooks/useInterceptedAxios';
+import {API_USERS_LIFESTYLE} from 'constants/apiUrls';
+import useAlert from 'hooks/useAlert';
+import {useNavigate} from 'react-router-dom';
 
 const LifestyleForm = () => {
+  const {
+    register,
+    handleSubmit,
+    formState: {errors},
+  } = useForm({resolver: yupResolver(validationSchema)});
+
+  // 페이지 이동을 위해 사용
+  const navigate = useNavigate();
+
+  // 알림 창 표시를 위한 훅
+  const [alert, showAlert] = useAlert();
+
+  const jwtAxios = useInterceptedAxios();
+
+  const onSubmit = async data => {
+    const body = JSON.stringify(data);
+
+    try {
+      const response = await jwtAxios.post(API_USERS_LIFESTYLE, body);
+      const responseJson = JSON.parse(response);
+
+      if (!responseJson.errorCode) {
+        // 에러 코드가 없는 경우, 폼 제출 성공
+        return navigate('/');
+      }
+    } catch (err) {
+      showAlert('danger', '잠시 후 다시 시도해주세요.', 2000);
+    }
+  };
+
+  const onInvalid = error => {};
+
   return (
-    <StyledForm>
-      <StyledFormItem>
-        <Form.Label>흡연</Form.Label>
-        <Form.Group controlId="formCheckSmoking">
-          <Form.Text className="mb-2">흡연 여부</Form.Text>
-          <Form.Check type="checkbox" id="check-smoking">
-            <Form.Check.Input type="checkbox" />
-            <Form.Check.Label>흡연자예요!</Form.Check.Label>
-          </Form.Check>
-        </Form.Group>
-        <hr />
-      </StyledFormItem>
-      <StyledFormItem>
-        <Form.Label>음주</Form.Label>
-        <Form.Group controlId="formSelectDrinking">
-          <Form.Text className="mb-1">음주 빈도</Form.Text>
-          <Form.Select>
-            <option>음주 빈도 선택</option>
-            <option>거의 안 마셔요</option>
-            <option>일주일에 2회 이하</option>
-            <option>기타</option>
-          </Form.Select>
-        </Form.Group>
-        <hr />
-      </StyledFormItem>
-      <StyledFormItem>
-        <Form.Label>잠버릇</Form.Label>
-        <Form.Group className="mb-4" controlId="formCheckSleeping">
-          <Form.Text className="mb-2">수면 장애</Form.Text>
-          <Form.Check type="checkbox" id="check-sleeping">
-            <Form.Check.Input type="checkbox" />
-            <Form.Check.Label>이갈이나 코골이가 있어요!</Form.Check.Label>
-          </Form.Check>
-        </Form.Group>
-        <Form.Group className="mb-3" controlId="formSelectSleeping">
-          <Form.Text className="mb-1">수면 패턴</Form.Text>
-          <Form.Select>
-            <option>수면 패턴 선택</option>
-            <option>6시 전에 일어나요</option>
-            <option>6시~9시에 일어나요</option>
-            <option>기타</option>
-          </Form.Select>
-        </Form.Group>
-        <hr />
-      </StyledFormItem>
-      <StyledFormItem>
-        <Form.Label>청결</Form.Label>
-        <Form.Group className="mb-3" controlId="formSelectOrganizing">
-          <Form.Text className="mb-1">물건을 쓰고 언제 정리하나요?</Form.Text>
-          <Form.Select>
-            <option>정리 주기 선택</option>
-            <option>사용하자마자 바로 정리해요</option>
-            <option>오늘 안에 정리해요</option>
-            <option>내일 정리해요</option>
-          </Form.Select>
-        </Form.Group>
-        <Form.Group className="mb-3" controlId="formSelectCleaning">
-          <Form.Text className="mb-1">청소 주기</Form.Text>
-          <Form.Select>
-            <option>청소 주기 선택</option>
-            <option>1주일에 한 번 이상 해요</option>
-            <option>2주일에 한 번 이상 해요</option>
-            <option>1달에 한 번 이상 해요</option>
-          </Form.Select>
-        </Form.Group>
-        <hr />
-      </StyledFormItem>
-      <StyledFormItem>
-        <Form.Group controlId="formControlEtc">
-          <Form.Label>기타</Form.Label>
-          <Form.Control
-            as="textarea"
-            placeholder="취미, 라이프스타일, MBTI 등 자기소개를 자유롭게 써주세요."
-            style={{height: '8rem', resize: 'none'}}
-          ></Form.Control>
-        </Form.Group>
-      </StyledFormItem>
-    </StyledForm>
+    <>
+      <Alert show={alert.show} variant={alert.variant}>
+        {alert.message}
+      </Alert>
+      <StyledForm onSubmit={handleSubmit(onSubmit, onInvalid)} noValidate>
+        <StyledFormItemPositioner>
+          <StyledFormItem>
+            <Form.Label>흡연</Form.Label>
+            <Form.Group className="mb-4" controlId="lifestyleFormSmokingType">
+              <Form.Text className="mb-2" as="label">
+                {smokingType.label}
+              </Form.Text>
+              <Form.Check
+                type="checkbox"
+                label={smokingType.placeholder}
+                isInvalid={!!errors[smokingType.name]}
+                {...register(smokingType.name)}
+              />
+            </Form.Group>
+            <hr />
+          </StyledFormItem>
+          <StyledFormItem>
+            <Form.Label>음주</Form.Label>
+            <Form.Group className="mb-3" controlId="lifestyleFormDrinkingType">
+              <Form.Text className="mb-1" as="label">
+                {drinkingType.label}
+              </Form.Text>
+              <Form.Select
+                isInvalid={!!errors[drinkingType.name]}
+                {...register(drinkingType.name)}
+              >
+                <option value="">{drinkingType.placeholder}</option>
+                {drinkingType.options.map(option => (
+                  <option key={option.value} value={option.value}>
+                    {option.label}
+                  </option>
+                ))}
+              </Form.Select>
+            </Form.Group>
+            <hr />
+          </StyledFormItem>
+          <StyledFormItem>
+            <Form.Label>잠버릇</Form.Label>
+            <Form.Group
+              className="mb-4"
+              controlId="lifestyleFormSleepingHabitType"
+            >
+              <Form.Text className="mb-2" as="label">
+                {sleepingHabitType.label}
+              </Form.Text>
+              <Form.Check
+                type="checkbox"
+                label={sleepingHabitType.placeholder}
+                isInvalid={!!errors[sleepingHabitType.name]}
+                {...register(sleepingHabitType.name)}
+              />
+            </Form.Group>
+            <Form.Group className="mb-3" controlId="lifestyleFormWakeupTime">
+              <Form.Text className="mb-1" as="label">
+                {wakeupTime.label}
+              </Form.Text>
+              <Form.Select
+                isInvalid={!!errors[wakeupTime.name]}
+                {...register(wakeupTime.name)}
+              >
+                <option value="">{wakeupTime.placeholder}</option>
+                {wakeupTime.options.map(option => (
+                  <option key={option.value} value={option.value}>
+                    {option.label}
+                  </option>
+                ))}
+              </Form.Select>
+            </Form.Group>
+            <hr />
+          </StyledFormItem>
+          <StyledFormItem>
+            <Form.Label>청결</Form.Label>
+            <Form.Group className="mb-3" controlId="lifestyleFormOrganizeType">
+              <Form.Text className="mb-1" as="label">
+                {organizeType.label}
+              </Form.Text>
+              <Form.Select
+                isInvalid={!!errors[organizeType.name]}
+                {...register(organizeType.name)}
+              >
+                <option value="">{organizeType.placeholder}</option>
+                {organizeType.options.map(option => (
+                  <option key={option.value} value={option.value}>
+                    {option.label}
+                  </option>
+                ))}
+              </Form.Select>
+            </Form.Group>
+            <Form.Group className="mb-3" controlId="lifestyleFormCleanupType">
+              <Form.Text className="mb-1" as="label">
+                {cleanupType.label}
+              </Form.Text>
+              <Form.Select
+                isInvalid={!!errors[cleanupType.name]}
+                {...register(cleanupType.name)}
+              >
+                <option value="">{cleanupType.placeholder}</option>
+                {cleanupType.options.map(option => (
+                  <option key={option.value} value={option.value}>
+                    {option.label}
+                  </option>
+                ))}
+              </Form.Select>
+            </Form.Group>
+            <hr />
+          </StyledFormItem>
+          <StyledFormItem>
+            <Form.Group className="mb-1" controlId="lifestyleFormIntroduce">
+              <Form.Label>{introduce.label}</Form.Label>
+              <Form.Control
+                as="textarea"
+                placeholder={introduce.placeholder}
+                style={{height: '8rem', resize: 'none'}}
+                isInvalid={!!errors[introduce.name]}
+                {...register(introduce.name)}
+              ></Form.Control>
+            </Form.Group>
+            <hr />
+          </StyledFormItem>
+        </StyledFormItemPositioner>
+        <div className="d-grid">
+          <Button
+            variant="primary"
+            size="lg"
+            type="submit"
+            style={{fontSize: '1rem'}}
+          >
+            제출하기
+          </Button>
+        </div>
+      </StyledForm>
+    </>
   );
 };
 

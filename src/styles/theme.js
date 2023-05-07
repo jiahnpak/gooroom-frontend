@@ -4,6 +4,7 @@ const colors = {
   lightgray: '#AFB1B6',
   btnBorder: '#D4D2E3',
   textDefault: '#5D5A88',
+  hr: '#ABABAB',
 };
 
 const btnVariant = {

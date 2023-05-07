@@ -18,8 +18,8 @@ import Logout from 'components/Logout/Logout';
 const App = () => {
   return (
     <>
-      <GlobalStyle />
       <ThemeProvider theme={theme}>
+        <GlobalStyle />
         <CookiesProvider>
           <AuthProvider>
             <Routes>
