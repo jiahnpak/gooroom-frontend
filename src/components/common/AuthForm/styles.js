@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import logo from 'assets/images/logo-square.svg';
+import logo from 'assets/images/logo_square.svg';
 import {Card} from 'react-bootstrap';
 import Link from 'components/common/Link';
 
@@ -24,6 +24,10 @@ const FormPositioner = styled.div`
 const FormContent = styled(Card.Body)`
   padding-left: 3rem;
   padding-right: 3rem;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 `;
 
 export const FormContainer = ({children}) => {
@@ -43,7 +47,6 @@ export const FormContainer = ({children}) => {
           <Link
             to="/"
             style={{
-              textDecoration: 'none',
               color: '#000000',
               fontFamily: 'BrandNameFont',
             }}

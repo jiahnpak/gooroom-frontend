@@ -11,7 +11,7 @@ const LoginForm = ({formMethods, onSubmit, onInvalid}) => {
   return (
     <>
       <Form
-        className="mb-5"
+        className="mb-5 w-100"
         onSubmit={handleSubmit(onSubmit, onInvalid)}
         noValidate
       >

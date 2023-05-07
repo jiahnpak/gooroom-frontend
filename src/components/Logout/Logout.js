@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import {useAuthDispatch} from 'hooks/useAuth';
 import {useEffect} from 'react';
 import {Link, useNavigate} from 'react-router-dom';
