@@ -3,65 +3,41 @@ import Button from 'components/common/Button';
 import ModalButton from './ModalButton';
 import {pwdMin, pwdMax} from './validationSchema';
 import {useState} from 'react';
+import useCheckAll from 'hooks/useCheckAll';
 
 const SignupForm = ({formMethods, onSubmit, onInvalid}) => {
-  // 체크박스 관리를 위한 state
-  const [checkedList, setCheckedList] = useState([]);
-  const termsList = [
-    {id: 1, title: '이용약관 동의'},
-    {id: 2, title: '개인정보 수집 및 동의'},
-  ];
-
-  /**
-   * 전체선택 체크박스의 change 이벤트를 관리한다.
-   * @param {boolean} checked - 체크 여부
-   */
-  const onCheckAll = checked => {
-    if (checked) {
-      // 전체선택 클릭 시 checkedList에 모든 약관의 id를 넣음
-      const idArray = [];
-      termsList.forEach(terms => idArray.push(terms.id));
-      setCheckedList(idArray);
-    } else {
-      // 전체선택 해제 시 checkedList를 비움
-      setCheckedList([]);
-    }
-    termsList.forEach(terms => setValue(`terms${terms.id}`, checked));
-  };
-
-  /**
-   * 개별 체크박스의 change 이벤트를 관리한다.
-   * @param {boolean} checked - 체크 여부
-   * @param {number} id - 클릭된 체크박스의 termsList.id
-   */
-  const onCheckElement = (checked, id) => {
-    if (checked) {
-      // checkedList에 id를 추가
-      setCheckedList(prev => [...prev, id]);
-    } else {
-      // checkedList에서 id를 삭제
-      setCheckedList(checkedList.filter(el => el !== id));
-    }
-  };
-
-  const [phoneModalShow, setPhoneModalShow] = useState(false);
-
-  const closePhoneModal = () => setPhoneModalShow(false);
-  const openPhoneModal = () => {
-    setPhoneModalShow(true);
-  };
-
-  const requestAuthCode = () => {
-    closePhoneModal();
-    /** TODO - 서버에 문자인증 요청 */
-  };
-
+  // 회원가입 폼 관리를 위한 함수
   const {
     register,
     handleSubmit,
     setValue,
     formState: {errors},
   } = formMethods;
+
+  const termsList = [
+    {id: 1, title: '이용약관 동의'},
+    {id: 2, title: '개인정보 수집 및 동의'},
+  ];
+  // 약관 전체동의를 위한 커스텀 훅
+  const [checkedList, onCheckAll, onCheckElement] = useCheckAll(termsList);
+
+  // onCheckAll()은 각 체크박스에 change 이벤트를 발생시키지 않으므로
+  // 직접 각 약관의 값을 변경한다.
+  const handleCheckAll = checked => {
+    onCheckAll(checked);
+    termsList.forEach(terms => setValue(`terms${terms.id}`, checked));
+  };
+
+  // 전화번호 인증 모달창이 열려있는지 여부를 저장
+  const [mobileModalShow, setMobileModalShow] = useState(false);
+
+  const closeMobileModal = () => setMobileModalShow(false);
+  const openMobileModal = () => setMobileModalShow(true);
+
+  /** TODO - 서버에 문자인증 요청 */
+  const requestMobileAuth = () => {
+    closeMobileModal();
+  };
 
   return (
     <>
@@ -70,7 +46,7 @@ const SignupForm = ({formMethods, onSubmit, onInvalid}) => {
         onSubmit={handleSubmit(onSubmit, onInvalid)}
         noValidate
       >
-        <Form.Group className="mb-5 text-start" controlId="signupFormEmail">
+        <Form.Group className="mb-5" controlId="signupFormEmail">
           <Form.Label>이메일</Form.Label>
           <Form.Control
             type="email"
@@ -83,7 +59,7 @@ const SignupForm = ({formMethods, onSubmit, onInvalid}) => {
           </Form.Control.Feedback>
         </Form.Group>
 
-        <Form.Group className="mb-5 text-start" controlId="signupFormPassword">
+        <Form.Group className="mb-5" controlId="signupFormPassword">
           <Form.Label>비밀번호</Form.Label>
           <Form.Control
             type="password"
@@ -96,7 +72,7 @@ const SignupForm = ({formMethods, onSubmit, onInvalid}) => {
           </Form.Control.Feedback>
         </Form.Group>
 
-        <Form.Group className="mb-5 text-start" controlId="signupFormConfirm">
+        <Form.Group className="mb-5" controlId="signupFormConfirm">
           <Form.Label>비밀번호 확인</Form.Label>
           <Form.Control
             type="password"
@@ -109,7 +85,7 @@ const SignupForm = ({formMethods, onSubmit, onInvalid}) => {
           </Form.Control.Feedback>
         </Form.Group>
 
-        <Form.Group className="mb-5 text-start" controlId="signupFormName">
+        <Form.Group className="mb-5" controlId="signupFormName">
           <Form.Label>이름</Form.Label>
           <Form.Control
             type="text"
@@ -122,7 +98,7 @@ const SignupForm = ({formMethods, onSubmit, onInvalid}) => {
           </Form.Control.Feedback>
         </Form.Group>
 
-        <Form.Group className="mb-5 text-start" controlId="signupFormNickname">
+        <Form.Group className="mb-5" controlId="signupFormNickname">
           <Form.Label>닉네임</Form.Label>
           <Form.Control
             type="text"
@@ -135,10 +111,40 @@ const SignupForm = ({formMethods, onSubmit, onInvalid}) => {
           </Form.Control.Feedback>
         </Form.Group>
 
-        <Form.Group className="mb-5 text-start">
+        <Form.Group className="mb-5">
+          <Form.Label className="d-block">성별</Form.Label>
+          <Form.Check
+            className="d-inline-flex me-5"
+            id="signupFormMale"
+            type="radio"
+            value="MALE"
+            label="남성"
+            {...register('gender')}
+          />
+          <Form.Check
+            className="d-inline-flex"
+            id="signupFormFemale"
+            type="radio"
+            value="FEMALE"
+            label="여성"
+            {...register('gender')}
+          />
+        </Form.Group>
+
+        <Form.Group className="mb-5">
+          <Form.Label>생년월일</Form.Label>
+          <Form.Control
+            type="text"
+            placeholder="생일을 입력해주세요."
+            isInvalid={!!errors.birthdate}
+            {...register('birthdate')}
+          />
+        </Form.Group>
+
+        <Form.Group className="mb-5">
           <Form.Label>전화번호</Form.Label>
           <div className="d-grid">
-            <Button variant="secondary" onClick={openPhoneModal}>
+            <Button variant="secondary" onClick={openMobileModal}>
               전화번호 인증하기
             </Button>
           </div>
@@ -149,7 +155,7 @@ const SignupForm = ({formMethods, onSubmit, onInvalid}) => {
             type="checkbox"
             label="전체 동의"
             checked={checkedList.length === termsList.length ? true : false}
-            onChange={e => onCheckAll(e.target.checked)}
+            onChange={e => handleCheckAll(e.target.checked)}
           />
         </Form.Group>
 
@@ -187,28 +193,33 @@ const SignupForm = ({formMethods, onSubmit, onInvalid}) => {
           </Button>
         </div>
       </Form>
-      <Modal show={phoneModalShow} onHide={closePhoneModal} size="lg" centered>
+      <Modal
+        show={mobileModalShow}
+        onHide={closeMobileModal}
+        size="lg"
+        centered
+      >
         <Modal.Header closeButton>
           <Modal.Title>전화번호 인증</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <Form.Group controlId="signupFormPhonenumber">
+          <Form.Group controlId="signupFormMobile">
             <Form.Label>전화번호</Form.Label>
             <Row className="align-items-center">
               <Col>
                 <Form.Control
                   type="text"
                   placeholder="전화번호를 입력해주세요."
-                  isInvalid={!!errors.phonenumber}
+                  isInvalid={!!errors.mobile}
                   autoFocus
-                  {...register('phonenumber')}
+                  {...register('mobile')}
                 />
               </Col>
               <Col sm="auto">
                 <Button
                   variant="primary"
                   type="button"
-                  onClick={requestAuthCode}
+                  onClick={requestMobileAuth}
                 >
                   인증번호 받기
                 </Button>

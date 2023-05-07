@@ -1,17 +1,20 @@
 import * as yup from 'yup';
+import {parse, isDate} from 'date-fns';
+
+export const pwdMin = 8; // 비밀번호 최소/최대 길이
+export const pwdMax = 16;
+
+const nameMin = 2; // 이름 및 닉네임 최소/최대 길이
+const nameMax = 30;
 
 const REGEXP_EMAIL =
   '^[\\w!#$%&’*+/=?`{|}~^-]+(?:\\.[\\w!#$%&’*+/=?`{|}~^-]+)*@(?:[a-zA-Z\\d-]+\\.)+[a-zA-Z]{2,6}$';
 
-export const pwdMin = 8;
-export const pwdMax = 16;
 const REGEXP_PASSWORD = `^.*(?=^.{${pwdMin},${pwdMax}}$)(?=.*\\d)(?=.*[a-zA-Z])(?=.*[!@#$%^&+=]).*$`;
-
-const nameMin = 2;
-const nameMax = 30;
 
 const REGEXP_PHONENUMBER = '^\\d{3}-\\d{3,4}-\\d{4}$';
 
+// 회원가입 에러 메시지
 export const ERRORS = {
   REQUIRED: '필수 항목입니다.',
   INVALID_EMAIL: '이메일 형식이 올바르지 않습니다.',
@@ -22,6 +25,7 @@ export const ERRORS = {
   PASSWORD_NOT_MATCH: '비밀번호가 일치하지 않습니다.',
 };
 
+// 회원가입 폼의 유효성 검증을 위한 yup 객체
 export const validationSchema = yup.object().shape({
   email: yup // 이메일 형식 확인
     .string()
@@ -45,11 +49,29 @@ export const validationSchema = yup.object().shape({
     .required(ERRORS.REQUIRED)
     .min(nameMin, ERRORS.INVALID_LENGTH)
     .max(nameMax, ERRORS.INVALID_LENGTH),
-  phonenumber: yup // 전화번호 형식 확인
+  mobile: yup // 전화번호 형식 확인
     .string()
     .required(ERRORS.REQUIRED)
-    .transform(value => value.replace(/\D/g, ''))
     .matches(REGEXP_PHONENUMBER, ERRORS.INVALID_PHONENUMBER),
-  terms1: yup.bool().required().oneOf([true]),
-  terms2: yup.bool().required().oneOf([true]),
+  gender: yup // 성별 확인
+    .string()
+    .required()
+    .oneOf(['MALE', 'FEMALE']),
+  birthdate: yup // 생년월일 확인
+    .date()
+    .required()
+    .transform((value, originalValue) => {
+      return isDate(originalValue)
+        ? originalValue
+        : parse(originalValue, 'yyyy-MM-dd', new Date());
+    })
+    .max(new Date()),
+  terms1: yup // 약관1 체크 확인
+    .bool()
+    .required()
+    .oneOf([true]),
+  terms2: yup // 약관2 체크 확인
+    .bool()
+    .required()
+    .oneOf([true]),
 });
