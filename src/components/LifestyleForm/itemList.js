@@ -26,9 +26,9 @@ export const wakeupTime = {
   label: '수면 패턴',
   placeholder: '수면 패턴 선택',
   options: [
-    {label: '6시 전에 일어나요', value: 0},
-    {label: '6시~9시에 일어나요', value: 6},
-    {label: '기타', value: 10},
+    {label: '6시 전에 일어나요', value: 'DAWN'},
+    {label: '6시~9시에 일어나요', value: 'MORNING'},
+    {label: '기타', value: 'AFTERNOON'},
   ],
 };
 

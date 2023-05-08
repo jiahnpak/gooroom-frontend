@@ -23,7 +23,7 @@ export const validationSchema = yup.object().shape({
     .required()
     .oneOf([true, false]),
   [wakeupTime.name]: yup // 수면 패턴 유효성 정의
-    .number()
+    .string()
     .required()
     .oneOf(wakeupTime.options.map(option => option.value)),
   [organizeType.name]: yup // 정리 주기 유효성 정의
