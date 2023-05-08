@@ -1,16 +1,16 @@
 import * as yup from 'yup';
 import {parse, isDate} from 'date-fns';
+import {emailMax, pwdMax, pwdMin} from 'constants/validation';
 
-export const pwdMin = 8; // 비밀번호 최소/최대 길이
-export const pwdMax = 16;
-
-const nameMin = 2; // 이름 및 닉네임 최소/최대 길이
-const nameMax = 30;
+export const nameMin = 2; // 이름 및 닉네임 최소/최대 길이
+export const nameMax = 30;
 
 const REGEXP_EMAIL =
-  '^[\\w!#$%&’*+/=?`{|}~^-]+(?:\\.[\\w!#$%&’*+/=?`{|}~^-]+)*@(?:[a-zA-Z\\d-]+\\.)+[a-zA-Z]{2,6}$';
+  '^[\\w!#$%&’*+\\/=?`{|}~^-]+(?:\\.[\\w!#$%&’*+\\/=?`{|}~^-]+)*@(?:[a-zA-Z\\d-]+\\.)+[a-zA-Z]{2,6}$';
 
 const REGEXP_PASSWORD = `^.*(?=^.{${pwdMin},${pwdMax}}$)(?=.*\\d)(?=.*[a-zA-Z])(?=.*[!@#$%^&+=]).*$`;
+
+const REGEXP_NAME = `^[A-Za-z가-힣]+$`;
 
 const REGEXP_PHONENUMBER = '^\\d{3}-\\d{3,4}-\\d{4}$';
 
@@ -19,7 +19,8 @@ export const ERRORS = {
   REQUIRED: '필수 항목입니다.',
   INVALID_EMAIL: '이메일 형식이 올바르지 않습니다.',
   INVALID_PASSWORD: `비밀번호는 영문자, 숫자, 특수문자를 포함한 ${pwdMin}~${pwdMax}자입니다.`,
-  INVALID_LENGTH: `${nameMin}~${nameMax}자를 입력해주세요.`,
+  INVALID_LENGTH: `최소 ${nameMin}글자를 입력해주세요.`,
+  INVALID_NAME: '이름 형식이 올바르지 않습니다.',
   INVALID_PHONENUMBER: '전화번호 형식이 올바르지 않습니다.',
   DUPLICATE_EMAIL: '이미 사용 중인 이메일입니다.',
   PASSWORD_NOT_MATCH: '비밀번호가 일치하지 않습니다.',
@@ -30,7 +31,8 @@ export const validationSchema = yup.object().shape({
   email: yup // 이메일 형식 확인
     .string()
     .required(ERRORS.REQUIRED)
-    .matches(REGEXP_EMAIL, ERRORS.INVALID_EMAIL),
+    .matches(REGEXP_EMAIL, ERRORS.INVALID_EMAIL)
+    .max(emailMax),
   password: yup // 비밀번호 형식 확인
     .string()
     .required(ERRORS.REQUIRED)
@@ -42,13 +44,15 @@ export const validationSchema = yup.object().shape({
   name: yup // 이름 글자 수 확인
     .string()
     .required(ERRORS.REQUIRED)
+    .matches(REGEXP_NAME, ERRORS.INVALID_NAME)
     .min(nameMin, ERRORS.INVALID_LENGTH)
-    .max(nameMax, ERRORS.INVALID_LENGTH),
+    .max(nameMax),
   nickname: yup // 닉네임 글자 수 확인
     .string()
     .required(ERRORS.REQUIRED)
+    .matches(REGEXP_NAME, ERRORS.INVALID_NAME)
     .min(nameMin, ERRORS.INVALID_LENGTH)
-    .max(nameMax, ERRORS.INVALID_LENGTH),
+    .max(nameMax),
   mobile: yup // 전화번호 형식 확인
     .string()
     .required(ERRORS.REQUIRED)

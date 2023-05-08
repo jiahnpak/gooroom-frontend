@@ -1,5 +1,6 @@
 import {Form} from 'react-bootstrap';
 import Button from 'components/common/Button';
+import {emailMax, pwdMin, pwdMax} from 'constants/validation';
 
 const LoginForm = ({formMethods, onSubmit, onInvalid}) => {
   const {
@@ -20,6 +21,7 @@ const LoginForm = ({formMethods, onSubmit, onInvalid}) => {
           <Form.Control
             type="email"
             placeholder="이메일을 입력해주세요."
+            maxLength={emailMax}
             isInvalid={!!errors.email}
             {...register('email')}
           />
@@ -30,6 +32,8 @@ const LoginForm = ({formMethods, onSubmit, onInvalid}) => {
           <Form.Control
             type="password"
             placeholder="비밀번호를 입력해주세요."
+            minLength={pwdMin}
+            maxLength={pwdMax}
             isInvalid={!!errors.password}
             {...register('password')}
           />

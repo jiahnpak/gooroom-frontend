@@ -1,7 +1,8 @@
 import {Col, Form, Modal, Row} from 'react-bootstrap';
 import Button from 'components/common/Button';
 import ModalButton from './ModalButton';
-import {pwdMin, pwdMax} from './validationSchema';
+import {pwdMin, pwdMax, emailMax} from 'constants/validation';
+import {nameMax, nameMin} from './validationSchema';
 import {useState} from 'react';
 import useCheckAll from 'hooks/useCheckAll';
 
@@ -51,6 +52,7 @@ const SignupForm = ({formMethods, onSubmit, onInvalid}) => {
           <Form.Control
             type="email"
             placeholder="이메일을 입력해주세요."
+            maxLength={emailMax}
             isInvalid={!!errors.email}
             {...register('email')}
           />
@@ -63,6 +65,8 @@ const SignupForm = ({formMethods, onSubmit, onInvalid}) => {
           <Form.Label>비밀번호</Form.Label>
           <Form.Control
             type="password"
+            minLength={pwdMin}
+            maxLength={pwdMax}
             placeholder={`영문자, 숫자, 특수문자를 포함한 ${pwdMin}~${pwdMax}자`}
             isInvalid={!!errors.password}
             {...register('password')}
@@ -76,6 +80,7 @@ const SignupForm = ({formMethods, onSubmit, onInvalid}) => {
           <Form.Label>비밀번호 확인</Form.Label>
           <Form.Control
             type="password"
+            maxLength={pwdMax}
             placeholder="비밀번호를 다시 입력해주세요."
             isInvalid={!!errors.confirm}
             {...register('confirm')}
@@ -90,6 +95,8 @@ const SignupForm = ({formMethods, onSubmit, onInvalid}) => {
           <Form.Control
             type="text"
             placeholder="이름을 입력해주세요."
+            minLength={nameMin}
+            maxLength={nameMax}
             isInvalid={!!errors.name}
             {...register('name')}
           />
@@ -103,6 +110,8 @@ const SignupForm = ({formMethods, onSubmit, onInvalid}) => {
           <Form.Control
             type="text"
             placeholder="닉네임을 입력해주세요."
+            minLength={nameMin}
+            maxLength={nameMax}
             isInvalid={!!errors.nickname}
             {...register('nickname')}
           />
