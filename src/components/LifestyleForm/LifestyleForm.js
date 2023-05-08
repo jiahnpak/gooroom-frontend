@@ -1,4 +1,4 @@
-import {Alert, Form} from 'react-bootstrap';
+import {Form} from 'react-bootstrap';
 import {StyledForm, StyledFormItem, StyledFormItemPositioner} from './styles';
 import {useForm} from 'react-hook-form';
 import {
@@ -17,6 +17,7 @@ import useInterceptedAxios from 'hooks/useInterceptedAxios';
 import {API_USERS_LIFESTYLE} from 'constants/apiUrls';
 import useAlert from 'hooks/useAlert';
 import {useNavigate} from 'react-router-dom';
+import Alert from 'components/common/Alert/Alert';
 
 const LifestyleForm = () => {
   const {
