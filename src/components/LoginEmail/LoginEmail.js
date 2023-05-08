@@ -42,8 +42,8 @@ const LoginEmail = ({title}) => {
 
       if (!responseJson.errorCode) {
         // 에러 코드가 없는 경우, 로그인 성공
-        setRefreshToken(responseJson.Access_refresh);
-        authDispatch({type: 'SET_TOKEN', token: responseJson.Access});
+        setRefreshToken(responseJson['Authorization-refresh']);
+        authDispatch({type: 'SET_TOKEN', token: responseJson.Authorization});
 
         return navigate('/');
       } else {

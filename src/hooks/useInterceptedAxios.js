@@ -10,9 +10,9 @@ const useInterceptedAxios = () => {
   useEffect(() => {
     const requestIntercept = customAxios.interceptors.request.use(
       config => {
-        // 모든 Request Header에 Access토큰을 넣어주는 역할
-        if (!config.headers['Access']) {
-          config.headers['Access'] = `${authState.Access}`;
+        // 모든 Request Header에 accessToken을 넣어주는 역할
+        if (!config.headers['Authorization']) {
+          config.headers['Authorization'] = `${authState.accessToken}`;
         }
         return config;
       },
@@ -25,15 +25,20 @@ const useInterceptedAxios = () => {
         const prevRequest = error?.config;
         if (error?.response?.status === 403 && !prevRequest?.sent) {
           prevRequest.sent = true;
-          const Access_refresh = getRefreshToken();
+          const refreshToken = getRefreshToken();
           const response = await customAxios.post(
             '/auth/refresh',
             {},
-            {headers: {...customAxios.defaults.headers, Access_refresh}},
+            {
+              headers: {
+                ...customAxios.defaults.headers,
+                'Authorization-refresh': refreshToken,
+              },
+            },
           );
-          const newAccess = JSON.parse(response).Access;
-          authDispatch({type: 'SET_TOKEN', token: newAccess});
-          prevRequest.headers['Access'] = `${newAccess}`;
+          const newaccessToken = JSON.parse(response).Authorization;
+          authDispatch({type: 'SET_TOKEN', token: newaccessToken});
+          prevRequest.headers['Authorization'] = `${newaccessToken}`;
           return customAxios(prevRequest);
         }
       },

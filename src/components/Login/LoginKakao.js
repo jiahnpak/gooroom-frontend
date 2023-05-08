@@ -20,8 +20,8 @@ const LoginKakao = props => {
       const responseJson = JSON.parse(response);
 
       // access token과 refresh token을 서버에게 받아 저장한다.
-      setRefreshToken(responseJson.Access_refresh);
-      authDispatch({type: 'SET_TOKEN', token: responseJson.Access});
+      setRefreshToken(responseJson['Authorization-refresh']);
+      authDispatch({type: 'SET_TOKEN', token: responseJson.Authorization});
 
       return navigate('/');
     };
