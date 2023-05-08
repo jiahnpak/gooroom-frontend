@@ -15,9 +15,8 @@ import {yupResolver} from '@hookform/resolvers/yup';
 import {validationSchema} from './validationSchema';
 import useInterceptedAxios from 'hooks/useInterceptedAxios';
 import {API_USERS_LIFESTYLE} from 'constants/apiUrls';
-import useAlert from 'hooks/useAlert';
+import {useAlert} from 'hooks/useAlert';
 import {useNavigate} from 'react-router-dom';
-import Alert from 'components/common/Alert/Alert';
 
 const LifestyleForm = () => {
   const {
@@ -30,7 +29,7 @@ const LifestyleForm = () => {
   const navigate = useNavigate();
 
   // 알림 창 표시를 위한 훅
-  const [alert, showAlert] = useAlert();
+  const showAlert = useAlert();
 
   const jwtAxios = useInterceptedAxios();
 
@@ -54,9 +53,6 @@ const LifestyleForm = () => {
 
   return (
     <>
-      <Alert show={alert.show} variant={alert.variant}>
-        {alert.message}
-      </Alert>
       <StyledForm onSubmit={handleSubmit(onSubmit, onInvalid)} noValidate>
         <StyledFormItemPositioner>
           <StyledFormItem>

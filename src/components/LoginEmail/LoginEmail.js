@@ -7,8 +7,7 @@ import {postLogin} from 'apis/auth';
 import {useNavigate} from 'react-router-dom';
 import {yupResolver} from '@hookform/resolvers/yup';
 import {validationSchema} from './validationSchema';
-import Alert from 'components/common/Alert';
-import useAlert from 'hooks/useAlert';
+import {useAlert} from 'hooks/useAlert';
 import {useAuthDispatch} from 'hooks/useAuth';
 import {setRefreshToken} from 'utils/RefreshToken';
 import {SIGNUP} from 'constants/path';
@@ -21,7 +20,7 @@ const LoginEmail = ({title}) => {
 
   const navigate = useNavigate(); // 페이지 이동을 위해 사용
 
-  const [alert, showAlert] = useAlert(); // 알림 창 표시를 위한 훅
+  const showAlert = useAlert(); // 알림 창 표시를 위한 훅
 
   const authDispatch = useAuthDispatch();
 
@@ -58,9 +57,6 @@ const LoginEmail = ({title}) => {
 
   return (
     <>
-      <Alert show={alert.show} variant={alert.variant}>
-        {alert.message}
-      </Alert>
       <AuthForm title={title}>
         <LoginForm
           formMethods={formMethods}

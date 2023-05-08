@@ -5,9 +5,8 @@ import {useForm} from 'react-hook-form';
 import {yupResolver} from '@hookform/resolvers/yup';
 import {ERRORS, validationSchema} from './validationSchema';
 import {useNavigate} from 'react-router-dom';
-import useAlert from 'hooks/useAlert';
-import Alert from 'components/common/Alert/Alert';
 import {format} from 'date-fns';
+import useAlert from 'hooks/useAlert';
 
 const Signup = ({title}) => {
   // 회원가입 폼에서 필드의 값과 유효성 검증을 위해 사용
@@ -20,7 +19,7 @@ const Signup = ({title}) => {
   const navigate = useNavigate();
 
   // 알림 창 표시를 위한 훅
-  const [alert, showAlert] = useAlert();
+  const showAlert = useAlert();
 
   /**
    * 회원가입 폼에서 submit 이벤트가 발생하고 모든 필드가 유효한 경우 수행되는 함수이다.
@@ -65,9 +64,6 @@ const Signup = ({title}) => {
 
   return (
     <>
-      <Alert show={alert.show} variant={alert.variant}>
-        {alert.message}
-      </Alert>
       <AuthForm title={title}>
         <SignupForm
           formMethods={formMethods}

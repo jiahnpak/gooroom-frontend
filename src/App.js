@@ -14,6 +14,7 @@ import * as PATH from 'constants/path';
 import LoginEmailPage from 'pages/LoginEmailPage';
 import LoginKakao from 'components/Login/LoginKakao';
 import Logout from 'components/Logout/Logout';
+import {AlertProvider} from 'contexts/AlertContext';
 
 const App = () => {
   return (
@@ -22,24 +23,26 @@ const App = () => {
         <GlobalStyle />
         <CookiesProvider>
           <AuthProvider>
-            <Routes>
-              <Route path="/" element={<Layout />}>
-                <Route index element={<MainPage />} />
-                <Route path={PATH.LOGIN} element={<LoginPage />} />
-                <Route path={PATH.LOGIN_EMAIL} element={<LoginEmailPage />} />
-                <Route path={PATH.LOGOUT} element={<Logout />} />
-                <Route
-                  path={PATH.REDIRECT_URI_KAKAO}
-                  element={<LoginKakao />}
-                />
-                <Route path={PATH.SIGNUP} element={<SignupPage />} />
-                <Route path={PATH.USERS}>
-                  <Route path={PATH.LIFESTYLE}>
-                    <Route index element={<LifestyleFormPage />} />
+            <AlertProvider>
+              <Routes>
+                <Route path="/" element={<Layout />}>
+                  <Route index element={<MainPage />} />
+                  <Route path={PATH.LOGIN} element={<LoginPage />} />
+                  <Route path={PATH.LOGIN_EMAIL} element={<LoginEmailPage />} />
+                  <Route path={PATH.LOGOUT} element={<Logout />} />
+                  <Route
+                    path={PATH.REDIRECT_URI_KAKAO}
+                    element={<LoginKakao />}
+                  />
+                  <Route path={PATH.SIGNUP} element={<SignupPage />} />
+                  <Route path={PATH.USERS}>
+                    <Route path={PATH.LIFESTYLE}>
+                      <Route index element={<LifestyleFormPage />} />
+                    </Route>
                   </Route>
                 </Route>
-              </Route>
-            </Routes>
+              </Routes>
+            </AlertProvider>
           </AuthProvider>
         </CookiesProvider>
       </ThemeProvider>

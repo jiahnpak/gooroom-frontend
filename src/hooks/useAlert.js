@@ -1,20 +1,17 @@
-import {useState, useCallback} from 'react';
+import {useAlertDispatch} from 'contexts/AlertContext';
 
-const useAlert = () => {
-  const [alert, setAlert] = useState({
-    show: false,
-    variant: 'light',
-    message: '',
-  });
+export const useAlert = () => {
+  const alertDispatch = useAlertDispatch();
 
-  const showAlert = useCallback((variant, message, time) => {
-    setAlert(alert => ({variant, message, show: true}));
+  const showAlert = (variant, message, time) => {
+    alertDispatch({type: 'SHOW', variant, message});
     setTimeout(() => {
-      setAlert(alert => ({...alert, show: false}));
+      alertDispatch({type: 'HIDE'});
     }, time);
-  }, []);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  };
 
-  return [alert, showAlert];
+  return showAlert;
 };
 
 export default useAlert;
