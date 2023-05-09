@@ -38,9 +38,9 @@ const LifestyleForm = () => {
 
     try {
       const response = await jwtAxios.post(API_USERS_LIFESTYLE, body);
-      const responseJson = JSON.parse(response);
+      const data = JSON.parse(response?.data || '{}');
 
-      if (!responseJson.errorCode) {
+      if (!data['errorCode']) {
         // 에러 코드가 없는 경우, 폼 제출 성공
         return navigate('/');
       }

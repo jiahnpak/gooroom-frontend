@@ -37,12 +37,12 @@ const LoginEmail = ({title}) => {
 
     try {
       const response = postLogin(body);
-      const responseJson = JSON.parse(response);
+      const data = JSON.parse(response?.data || '{}');
 
-      if (!responseJson.errorCode) {
+      if (!data['errorCode']) {
         // 에러 코드가 없는 경우, 로그인 성공
-        setRefreshToken(responseJson['Authorization-refresh']);
-        authDispatch({type: 'SET_TOKEN', token: responseJson.Authorization});
+        setRefreshToken(data['Authorization-refresh']);
+        authDispatch({type: 'SET_TOKEN', token: data['Authorization']});
 
         return navigate('/');
       } else {

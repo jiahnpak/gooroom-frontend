@@ -17,11 +17,11 @@ const LoginKakao = props => {
   useEffect(() => {
     const postLoginKakao = async () => {
       const response = await customAxios.post(REDIRECT_URI_KAKAO, code);
-      const responseJson = JSON.parse(response);
+      const data = JSON.parse(response?.data || '{}');
 
       // access token과 refresh token을 서버에게 받아 저장한다.
-      setRefreshToken(responseJson['Authorization-refresh']);
-      authDispatch({type: 'SET_TOKEN', token: responseJson.Authorization});
+      setRefreshToken(data['Authorization-refresh']);
+      authDispatch({type: 'SET_TOKEN', token: data['Authorization']});
 
       return navigate('/');
     };

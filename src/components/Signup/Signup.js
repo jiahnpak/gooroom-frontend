@@ -41,12 +41,12 @@ const Signup = ({title}) => {
 
     try {
       const response = postSignup(body);
-      const responseJson = JSON.parse(response);
+      const data = JSON.parse(response?.data || '{}');
 
-      if (!responseJson.errorCode) {
+      if (!data['errorCode']) {
         // 에러 코드가 없는 경우, 회원가입 성공
         return navigate('/login');
-      } else if (responseJson.errorCode === 409) {
+      } else if (data['errorCode'] === 409) {
         setError('email', {type: 'custom', message: ERRORS.DUPLICATE_EMAIL});
       }
     } catch (err) {
