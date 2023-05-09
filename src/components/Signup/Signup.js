@@ -10,6 +10,7 @@ import useAlert from 'hooks/useAlert';
 import {setRefreshToken} from 'utils/RefreshToken';
 import {useAuthDispatch} from 'hooks/useAuth';
 import {USERS_LIFESTYLE} from 'constants/path';
+import errorCode from 'constants/errorCode';
 
 const Signup = ({title}) => {
   // 회원가입 폼에서 필드의 값과 유효성 검증을 위해 사용
@@ -54,7 +55,7 @@ const Signup = ({title}) => {
         authDispatch({type: 'SET_TOKEN', token: data['Authorization']});
 
         return navigate(USERS_LIFESTYLE);
-      } else if (data['errorCode'] === 409) {
+      } else if (data['errorCode'] === errorCode.ALREADY_EXIST_USER_EMAIL) {
         setError('email', {type: 'custom', message: ERRORS.DUPLICATE_EMAIL});
       }
     } catch (err) {
