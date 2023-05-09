@@ -7,6 +7,9 @@ import {ERRORS, validationSchema} from './validationSchema';
 import {useNavigate} from 'react-router-dom';
 import {format} from 'date-fns';
 import useAlert from 'hooks/useAlert';
+import {setRefreshToken} from 'utils/RefreshToken';
+import {useAuthDispatch} from 'hooks/useAuth';
+import {USERS_LIFESTYLE} from 'constants/path';
 
 const Signup = ({title}) => {
   // 회원가입 폼에서 필드의 값과 유효성 검증을 위해 사용
@@ -20,6 +23,8 @@ const Signup = ({title}) => {
 
   // 알림 창 표시를 위한 훅
   const showAlert = useAlert();
+
+  const authDispatch = useAuthDispatch();
 
   /**
    * 회원가입 폼에서 submit 이벤트가 발생하고 모든 필드가 유효한 경우 수행되는 함수이다.
@@ -45,7 +50,10 @@ const Signup = ({title}) => {
 
       if (!data['errorCode']) {
         // 에러 코드가 없는 경우, 회원가입 성공
-        return navigate('/login');
+        setRefreshToken(data['Authorization-refresh']);
+        authDispatch({type: 'SET_TOKEN', token: data['Authorization']});
+
+        return navigate(USERS_LIFESTYLE);
       } else if (data['errorCode'] === 409) {
         setError('email', {type: 'custom', message: ERRORS.DUPLICATE_EMAIL});
       }
