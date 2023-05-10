@@ -1,27 +1,10 @@
 import Profile from 'components/Profile';
-
-const {LOGIN} = require('constants/path');
-const {default: useAlert} = require('hooks/useAlert');
-const {default: useAuthState} = require('hooks/useAuth');
-const {useEffect} = require('react');
-const {useNavigate} = require('react-router-dom');
+import useAuthRedirect from 'hooks/useAuthRedirect';
 
 const ProfilePage = () => {
-  const authState = useAuthState();
-  const showAlert = useAlert();
-  const navigate = useNavigate();
+  // 인증되지 않은 사용자를 로그인 페이지로 리다이렉트
+  useAuthRedirect();
 
-  // useEffect(() => {
-  //   if (!authState['authenticated']) {
-  //     showAlert(
-  //       'warning',
-  //       '인증이 필요한 서비스입니다. 로그인 후 이용해주세요.',
-  //       2000,
-  //     );
-  //     navigate(LOGIN);
-  //   }
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [authState]);
   return <Profile></Profile>;
 };
 
