@@ -10,17 +10,17 @@ import FavoritePosts from './FavoritePosts';
 import {useMember} from 'contexts/MemberContext';
 import {useProfileImage} from 'contexts/ProfileImageContext';
 import {useState} from 'react';
+import {PROFILE_IMAGE} from 'constants/defaultValue';
 
 const Profile = () => {
   const member = useMember();
-  const profileImage = useProfileImage();
-
-  const navigate = useNavigate();
-
   const [profile, setProfile] = useState({
     member: {...member},
-    profileImage: profileImage,
+    profileImage: PROFILE_IMAGE,
   });
+  const profileImage = useProfileImage(profile.member.nickname);
+
+  const navigate = useNavigate();
 
   // 마이페이지 탭 목록
   const tabList = [

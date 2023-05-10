@@ -10,11 +10,15 @@ export const ProfileImageProvider = ({children}) => {
   const jwtAxios = useInterceptedAxios();
   const [profileImage, setProfileImage] = useState(PROFILE_IMAGE);
 
-  const getProfileImage = async () => {
+  const getProfileImage = async nickname => {
     try {
-      const response = await jwtAxios.get(API_USERS_PROFILEIMAGE, {
-        responseType: 'arraybuffer',
-      });
+      console.log(`${API_USERS_PROFILEIMAGE}/${nickname}`);
+      const response = await jwtAxios.get(
+        `${API_USERS_PROFILEIMAGE}/${nickname}`,
+        {
+          responseType: 'arraybuffer',
+        },
+      );
       const imageData = response?.data?.file;
 
       if (imageData) {
@@ -26,20 +30,21 @@ export const ProfileImageProvider = ({children}) => {
     } catch (err) {}
   };
 
-  // 유저 데이터와 프로필 이미지 가져오기
-  useEffect(() => {
-    getProfileImage();
-  }, []);
-
   return (
-    <ProfileImageContext.Provider value={profileImage}>
+    <ProfileImageContext.Provider value={{profileImage, getProfileImage}}>
       {children}
     </ProfileImageContext.Provider>
   );
 };
 
 // 사용자 정보에 접근하는 custom hook 생성
-export const useProfileImage = () => {
-  const profileImage = useContext(ProfileImageContext);
+export const useProfileImage = nickname => {
+  const {profileImage, getProfileImage} = useContext(ProfileImageContext);
+
+  // 프로필 이미지 가져오기
+  useEffect(() => {
+    getProfileImage(nickname);
+  }, []);
+
   return profileImage;
 };
