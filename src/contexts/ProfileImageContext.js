@@ -36,7 +36,7 @@ export const ProfileImageProvider = ({children}) => {
   );
 };
 
-// 사용자 정보에 접근하는 custom hook 생성
+// 프로필 이미지에 접근하는 custom hook 생성
 export const useProfileImage = nickname => {
   const {profileImage, getProfileImage} = useContext(ProfileImageContext);
 

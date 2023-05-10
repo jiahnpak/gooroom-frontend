@@ -3,7 +3,7 @@ import {useProfileImage} from 'contexts/ProfileImageContext';
 import {useState} from 'react';
 import {useEffect} from 'react';
 import {useNavigate, useParams} from 'react-router-dom';
-import useLifestyle from './useLifestyle';
+import {useLifestyle} from 'contexts/LifestyleContext';
 import {
   StyledLifestyle,
   StyledLifestyleBottom,

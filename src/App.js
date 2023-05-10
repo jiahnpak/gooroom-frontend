@@ -21,6 +21,7 @@ import {MemberProvider} from 'contexts/MemberContext';
 import {ProfileImageProvider} from 'contexts/ProfileImageContext';
 import Provider from 'components/common/Provider/Provider';
 import LoginNaver from 'components/Login/LoginNaver';
+import {LifestyleProvider} from 'contexts/LifestyleContext';
 
 const App = () => {
   return (
@@ -53,16 +54,27 @@ const App = () => {
                     }
                   >
                     <Route path={PATH.USERS} element={<ProfilePage />} />
+                  </Route>
+                  <Route
+                    element={
+                      <Provider
+                        providers={[
+                          MemberProvider,
+                          ProfileImageProvider,
+                          LifestyleProvider,
+                        ]}
+                      />
+                    }
+                  >
                     <Route
                       path={`${PATH.USERS_LIFESTYLE}/:nickname`}
                       element={<LifestylePage />}
                     />
+                    <Route
+                      path={PATH.USERS_LIFESTYLE}
+                      element={<LifestyleFormPage />}
+                    />
                   </Route>
-
-                  <Route
-                    path={PATH.USERS_LIFESTYLE}
-                    element={<LifestyleFormPage />}
-                  />
                 </Route>
               </Routes>
             </AlertProvider>

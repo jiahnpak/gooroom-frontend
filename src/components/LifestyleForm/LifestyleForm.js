@@ -17,13 +17,29 @@ import useInterceptedAxios from 'hooks/useInterceptedAxios';
 import {API_USERS_LIFESTYLE} from 'constants/apiUrls';
 import {useAlert} from 'hooks/useAlert';
 import {useNavigate} from 'react-router-dom';
+import {initialLifestyle, useLifestyle} from 'contexts/LifestyleContext';
+import {useMember} from 'contexts/MemberContext';
 
 const LifestyleForm = () => {
+  const member = useMember();
+  const lifestyle = useLifestyle(member.nickname);
+
   const {
     register,
     handleSubmit,
     formState: {errors},
-  } = useForm({resolver: yupResolver(validationSchema)});
+  } = useForm({
+    resolver: yupResolver(validationSchema),
+    defaultValues: {
+      [smokingType.name]: lifestyle.smokingType,
+      [drinkingType.name]: lifestyle.drinkingType,
+      [sleepingHabitType.name]: lifestyle.sleepingHabitType,
+      [wakeupTime.name]: lifestyle.wakeupTime,
+      [organizeType.name]: lifestyle.organizeType,
+      [cleanupType.name]: lifestyle.cleanupType,
+      [introduce.name]: lifestyle.introduce,
+    },
+  });
 
   // 페이지 이동을 위해 사용
   const navigate = useNavigate();
@@ -35,9 +51,14 @@ const LifestyleForm = () => {
 
   const onSubmit = async data => {
     const body = JSON.stringify(data);
+    const method = lifestyle === initialLifestyle ? 'post' : 'patch';
 
     try {
-      const response = await jwtAxios.post(API_USERS_LIFESTYLE, body);
+      const response = await jwtAxios({
+        url: API_USERS_LIFESTYLE,
+        method: method,
+        data: body,
+      });
       const data = JSON.parse(response?.data || '{}');
 
       if (!data['errorCode']) {
