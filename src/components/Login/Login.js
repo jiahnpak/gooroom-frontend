@@ -3,7 +3,10 @@ import AuthForm from 'components/common/AuthForm';
 import Link from 'components/common/Link';
 import {LOGIN_EMAIL} from 'constants/path';
 import kakaoLoginImg from 'assets/images/kakao_login_medium_wide.png';
-import {API_LOGIN_KAKAO} from 'constants/apiUrls';
+import naverLoginImg from 'assets/images/naver_login_white.png';
+import {API_LOGIN_KAKAO, API_LOGIN_NAVER} from 'constants/apiUrls';
+import {FormFooter, IconContainer} from './styles';
+import {FaEnvelope} from 'react-icons/fa';
 
 const Login = ({title}) => {
   const onClickKakao = () => {
@@ -22,16 +25,30 @@ const Login = ({title}) => {
     window.location.href = KAKAO_AUTH_URL;
   };
 
+  const onClickNaver = () => {
+    const STATE_STRING = Math.random().toString(36).substring(2);
+    const NAVER_AUTH_URL = `${API_LOGIN_NAVER}&state=${STATE_STRING}`;
+    window.location.href = NAVER_AUTH_URL;
+  };
+
   return (
     <>
       <AuthForm title={title}>
-        <a href onClick={onClickKakao}>
-          <img src={kakaoLoginImg} alt="" />
-        </a>
-        <Card.Text className="mb-5 text-center">
+        <img
+          height="50"
+          src={naverLoginImg}
+          alt="/"
+          onClick={onClickNaver}
+          style={{cursor: 'pointer'}}
+        />
+        <FormFooter>
           다른 방법도 있어요!
-          <Link to={LOGIN_EMAIL}>이메일</Link>
-        </Card.Text>
+          <Link to={LOGIN_EMAIL}>
+            <IconContainer>
+              <FaEnvelope />
+            </IconContainer>
+          </Link>
+        </FormFooter>
       </AuthForm>
     </>
   );

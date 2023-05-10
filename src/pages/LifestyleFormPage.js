@@ -7,7 +7,7 @@ const LifestyleFormPage = () => {
   const description = `생활 패턴, 청소 주기, MBTI까지, \n당신이 찾아 헤맨 완벽한 친구를 구해줄게요.`;
 
   // 인증되지 않은 사용자를 로그인 페이지로 리다이렉트
-  useAuthRedirect();
+  // useAuthRedirect();
 
   return (
     <Section title={title} description={description}>

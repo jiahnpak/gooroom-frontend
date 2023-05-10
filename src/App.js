@@ -20,6 +20,7 @@ import LifestylePage from 'pages/LifestylePage';
 import {MemberProvider} from 'contexts/MemberContext';
 import {ProfileImageProvider} from 'contexts/ProfileImageContext';
 import Provider from 'components/common/Provider/Provider';
+import LoginNaver from 'components/Login/LoginNaver';
 
 const App = () => {
   return (
@@ -38,6 +39,10 @@ const App = () => {
                   <Route
                     path={PATH.REDIRECT_URI_KAKAO}
                     element={<LoginKakao />}
+                  />
+                  <Route
+                    path={PATH.REDIRECT_URI_NAVER}
+                    element={<LoginNaver />}
                   />
                   <Route path={PATH.SIGNUP} element={<SignupPage />} />
                   <Route
