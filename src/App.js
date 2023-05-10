@@ -16,6 +16,10 @@ import LoginKakao from 'components/Login/LoginKakao';
 import Logout from 'components/Logout/Logout';
 import {AlertProvider} from 'contexts/AlertContext';
 import ProfilePage from 'pages/ProfilePage';
+import LifestylePage from 'pages/LifestylePage';
+import {MemberProvider} from 'contexts/MemberContext';
+import {ProfileImageProvider} from 'contexts/ProfileImageContext';
+import Provider from 'components/common/Provider/Provider';
 
 const App = () => {
   return (
@@ -36,10 +40,24 @@ const App = () => {
                     element={<LoginKakao />}
                   />
                   <Route path={PATH.SIGNUP} element={<SignupPage />} />
-                  <Route path={PATH.USERS} element={<ProfilePage />}></Route>
-                  <Route path={PATH.USERS_LIFESTYLE}>
-                    <Route index element={<LifestyleFormPage />} />
+                  <Route
+                    element={
+                      <Provider
+                        providers={[MemberProvider, ProfileImageProvider]}
+                      />
+                    }
+                  >
+                    <Route path={PATH.USERS} element={<ProfilePage />} />
+                    <Route
+                      path={`${PATH.USERS_LIFESTYLE}/:nickname`}
+                      element={<LifestylePage />}
+                    />
                   </Route>
+
+                  <Route
+                    path={PATH.USERS_LIFESTYLE}
+                    element={<LifestyleFormPage />}
+                  />
                 </Route>
               </Routes>
             </AlertProvider>

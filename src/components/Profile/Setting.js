@@ -22,7 +22,7 @@ import useAlert from 'hooks/useAlert';
 import {useNavigate} from 'react-router-dom';
 import {LOGOUT} from 'constants/path';
 
-const Settings = ({profileState, profileDispatch}) => {
+const Settings = ({profile, setProfile}) => {
   const jwtAxios = useInterceptedAxios();
 
   const {
@@ -31,8 +31,8 @@ const Settings = ({profileState, profileDispatch}) => {
     formState: {errors},
   } = useForm({
     defaultValues: {
-      nickname: profileState.member.nickname,
-      mobile: profileState.member.mobile,
+      nickname: profile.member.nickname,
+      mobile: profile.member.mobile,
     },
     resolver: yupResolver(validationSchema),
   });
@@ -75,13 +75,14 @@ const Settings = ({profileState, profileDispatch}) => {
 
       if (!data['errorCode']) {
         // 에러가 없는 경우 profile 상태를 최신화시킨다.
-        profileDispatch({
-          type: 'UPDATE_MEMBER',
+        setProfile(prevProfile => ({
+          ...prevProfile,
           member: {
+            ...prevProfile.member,
             nickname,
             mobile,
           },
-        });
+        }));
       }
     } catch (err) {
       showAlert(
@@ -117,8 +118,7 @@ const Settings = ({profileState, profileDispatch}) => {
     formData.append('file', file);
 
     try {
-      const method =
-        profileState.profileImage.encoded === PROFILE_IMAGE ? 'post' : 'patch';
+      const method = profile.profileImage === PROFILE_IMAGE ? 'post' : 'patch';
       // 파일을 서버에 업로드한다.
       const response = await jwtAxios({
         method: method,
@@ -140,10 +140,10 @@ const Settings = ({profileState, profileDispatch}) => {
         reader.onload = () => {
           const base64Image = reader.result;
           // base64 데이터를 state에 저장
-          profileDispatch({
-            type: 'UPDATE_IMAGE',
-            file: `data:${file.type};base64,${base64Image}`,
-          });
+          setProfile(prevProfile => ({
+            ...prevProfile,
+            profileImage: base64Image,
+          }));
         };
       }
     } catch (err) {}
@@ -215,7 +215,7 @@ const Settings = ({profileState, profileDispatch}) => {
                   <Form.Label className="d-block">프로필 사진</Form.Label>
                   <Form.Group className="position-relative">
                     <Image
-                      src={profileState.profileImage.encoded}
+                      src={profile.profileImage}
                       width="192"
                       height="auto"
                       roundedCircle
