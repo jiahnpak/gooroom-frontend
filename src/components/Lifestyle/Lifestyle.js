@@ -65,13 +65,18 @@ const Lifestyle = () => {
           </Col>
           <Col>
             <StyledProfileName>{profile.member.name}</StyledProfileName>
-            <StyledProfileMeta>{`성별: ${
-              profile.member.gender === 'MALE'
-                ? '남자'
-                : profile.member.gender === 'FEMALE'
-                ? '여자'
-                : ''
-            } | 연령대: ${profile.member.birthyear}`}</StyledProfileMeta>
+            <StyledProfileMeta>
+              {profile.member.gender &&
+                `성별: ${
+                  profile.member.gender === 'MALE'
+                    ? '남자 '
+                    : profile.member.gender === 'FEMALE'
+                    ? '여자 '
+                    : ''
+                }`}{' '}
+              {profile.member.birthyear &&
+                `연령대: ${profile.member.birthyear}`}
+            </StyledProfileMeta>
           </Col>
           {nickname === loginMember.nickname && (
             <Col className="ms-auto">
@@ -90,21 +95,16 @@ const Lifestyle = () => {
           <Col>
             <StyledLifestyleTitle>흡연</StyledLifestyleTitle>
             <StyledParagraph>
-              {
-                smokingType.options.find(
-                  option => option.value === profile.lifestyle.smokingType,
-                ).label
-              }
+              {profile.lifestyle.smokingType && smokingType.placeholder}
             </StyledParagraph>
           </Col>
           <Col>
             <StyledLifestyleTitle>음주</StyledLifestyleTitle>
             <StyledParagraph>
-              {
+              {profile.lifestyle.drinkingType &&
                 drinkingType.options.find(
                   option => option.value === profile.lifestyle.drinkingType,
-                ).label
-              }
+                ).label}
             </StyledParagraph>
           </Col>
         </Row>
@@ -112,36 +112,29 @@ const Lifestyle = () => {
           <Col>
             <StyledLifestyleTitle>잠버릇</StyledLifestyleTitle>
             <StyledParagraph>
-              {
-                sleepingHabitType.options.find(
-                  option =>
-                    option.value === profile.lifestyle.sleepingHabitType,
-                ).label
-              }
+              {profile.lifestyle.sleepingHabitType &&
+                sleepingHabitType.placeholder}
             </StyledParagraph>
             <StyledParagraph>
-              {
+              {profile.lifestyle.wakeupTime &&
                 wakeupTime.options.find(
                   option => option.value === profile.lifestyle.wakeupTime,
-                ).label
-              }
+                ).label}
             </StyledParagraph>
           </Col>
           <Col>
             <StyledLifestyleTitle>청결</StyledLifestyleTitle>
             <StyledParagraph>
-              {
+              {profile.lifestyle.organizeType &&
                 organizeType.options.find(
                   option => option.value === profile.lifestyle.organizeType,
-                ).label
-              }
+                ).label}
             </StyledParagraph>
             <StyledParagraph>
-              {
+              {profile.lifestyle.cleanupType &&
                 cleanupType.options.find(
                   option => option.value === profile.lifestyle.cleanupType,
-                ).label
-              }
+                ).label}
             </StyledParagraph>
           </Col>
         </Row>

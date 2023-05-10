@@ -8,12 +8,12 @@ const useLifestyle = ({nickname}) => {
 
   const [lifestyle, setLifestyle] = useState({
     smokingType: false,
-    drinkingType: 'USUALLY',
+    drinkingType: '',
     sleepingHabitType: false,
-    wakeupTime: 'DAWN',
-    organizeType: 'NOW',
-    cleanupType: 'PER_1WEEK',
-    introduce: 'Glad to see you!',
+    wakeupTime: '',
+    organizeType: '',
+    cleanupType: '',
+    introduce: '',
   });
 
   const getLifestyle = async () => {
