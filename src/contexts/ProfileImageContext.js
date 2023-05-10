@@ -12,7 +12,6 @@ export const ProfileImageProvider = ({children}) => {
 
   const getProfileImage = async nickname => {
     try {
-      console.log(`${API_USERS_PROFILEIMAGE}/${nickname}`);
       const response = await jwtAxios.get(
         `${API_USERS_PROFILEIMAGE}/${nickname}`,
         {

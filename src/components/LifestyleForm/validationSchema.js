@@ -7,7 +7,7 @@ import {
   organizeType,
   cleanupType,
   introduce,
-} from './itemList';
+} from 'constants/lifestyleList';
 
 export const validationSchema = yup.object().shape({
   [smokingType.name]: yup // 흡연 여부 유효성 정의

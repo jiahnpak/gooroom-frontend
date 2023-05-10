@@ -2,6 +2,10 @@ export const smokingType = {
   name: 'smokingType',
   label: '흡연 여부',
   placeholder: '흡연자예요!',
+  options: [
+    {label: '비흡연자예요!', value: false},
+    {label: '흡연자예요!', value: true},
+  ],
 };
 
 export const drinkingType = {
@@ -19,6 +23,10 @@ export const sleepingHabitType = {
   name: 'sleepingHabitType',
   label: '수면 장애',
   placeholder: '이갈이나 코골이가 있어요!',
+  options: [
+    {label: '이갈이나 코골이가 없어요!', value: false},
+    {label: '이갈이나 코골이가 있어요!', value: true},
+  ],
 };
 
 export const wakeupTime = {

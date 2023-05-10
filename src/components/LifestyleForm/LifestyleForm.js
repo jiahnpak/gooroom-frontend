@@ -9,7 +9,7 @@ import {
   organizeType,
   cleanupType,
   introduce,
-} from './itemList';
+} from 'constants/lifestyleList';
 import Button from 'components/common/Button/Button';
 import {yupResolver} from '@hookform/resolvers/yup';
 import {validationSchema} from './validationSchema';

@@ -9,7 +9,10 @@ const Section = ({children, title, description}) => {
   return (
     <StyledSection>
       <StyledSectionTitle>{title}</StyledSectionTitle>
-      <StyledSectionDescription>{description}</StyledSectionDescription>
+      {description && (
+        <StyledSectionDescription>{description}</StyledSectionDescription>
+      )}
+
       {children}
     </StyledSection>
   );
