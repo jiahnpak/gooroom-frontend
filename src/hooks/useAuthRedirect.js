@@ -17,7 +17,7 @@ const useAuthRedirect = () => {
         '인증이 필요한 서비스입니다. 로그인 후 이용해주세요.',
         2000,
       );
-      navigate(LOGIN);
+      navigate(LOGIN, {replace: true});
     }
   }, [authState.authenticated, navigate, showAlert]);
 
