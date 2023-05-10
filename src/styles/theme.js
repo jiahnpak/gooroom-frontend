@@ -2,9 +2,12 @@ const colors = {
   primary: '#6A5ACD',
   white: '#FBFBFB',
   lightgray: '#AFB1B6',
-  btnBorder: '#D4D2E3',
-  textDefault: '#5D5A88',
+  danger: '#F85149',
+  secondaryBtnBorder: '#D4D2E3',
+  secondaryBtnText: '#5D5A88',
+  textDefault: '#5D5D5D',
   hr: '#ABABAB',
+  divider: '#D4D2E3',
 };
 
 const btnVariant = {
@@ -14,9 +17,14 @@ const btnVariant = {
     border: colors.primary,
   },
   secondary: {
-    font: colors.textDefault,
+    font: colors.secondaryBtnText,
     background: colors.white,
-    border: colors.btnBorder,
+    border: colors.secondaryBtnBorder,
+  },
+  danger: {
+    font: colors.danger,
+    background: colors.white,
+    border: colors.secondaryBtnBorder,
   },
 };
 

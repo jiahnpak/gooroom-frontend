@@ -7,4 +7,7 @@ export const API_LOGIN_KAKAO = `https://kauth.kakao.com/oauth/authorize?response
 
 export const API_SIGNUP_EMAIL = '/signup/email';
 
+export const API_USERS = '/users';
 export const API_USERS_LIFESTYLE = '/users/lifestyle';
+
+export const API_USERS_PROFILEIMAGE = '/users/profileImage';

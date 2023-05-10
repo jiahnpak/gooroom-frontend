@@ -1,8 +1,7 @@
 import {Col, Form, Modal, Row} from 'react-bootstrap';
 import Button from 'components/common/Button';
 import ModalButton from './ModalButton';
-import {pwdMin, pwdMax, emailMax} from 'constants/validation';
-import {nameMax, nameMin} from './validationSchema';
+import {pwdMin, pwdMax, emailMax, nameMax, nameMin} from 'constants/validation';
 import {useState} from 'react';
 import useCheckAll from 'hooks/useCheckAll';
 

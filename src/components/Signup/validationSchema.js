@@ -1,18 +1,19 @@
 import * as yup from 'yup';
 import {parse, isDate} from 'date-fns';
-import {emailMax, pwdMax, pwdMin} from 'constants/validation';
-
-export const nameMin = 2; // 이름 및 닉네임 최소/최대 길이
-export const nameMax = 30;
+import {
+  REGEXP_NAME,
+  REGEXP_PHONENUMBER,
+  emailMax,
+  nameMax,
+  nameMin,
+  pwdMax,
+  pwdMin,
+} from 'constants/validation';
 
 const REGEXP_EMAIL =
   '^[\\w!#$%&’*+\\/=?`{|}~^-]+(?:\\.[\\w!#$%&’*+\\/=?`{|}~^-]+)*@(?:[a-zA-Z\\d-]+\\.)+[a-zA-Z]{2,6}$';
 
 const REGEXP_PASSWORD = `^.*(?=^.{${pwdMin},${pwdMax}}$)(?=.*\\d)(?=.*[a-zA-Z])(?=.*[!@#$%^&+=]).*$`;
-
-const REGEXP_NAME = `^[A-Za-z가-힣]+$`;
-
-const REGEXP_PHONENUMBER = '^\\d{3}-\\d{3,4}-\\d{4}$';
 
 // 회원가입 에러 메시지
 export const ERRORS = {

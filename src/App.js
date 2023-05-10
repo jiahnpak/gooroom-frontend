@@ -15,6 +15,7 @@ import LoginEmailPage from 'pages/LoginEmailPage';
 import LoginKakao from 'components/Login/LoginKakao';
 import Logout from 'components/Logout/Logout';
 import {AlertProvider} from 'contexts/AlertContext';
+import ProfilePage from 'pages/ProfilePage';
 
 const App = () => {
   return (
@@ -35,10 +36,9 @@ const App = () => {
                     element={<LoginKakao />}
                   />
                   <Route path={PATH.SIGNUP} element={<SignupPage />} />
-                  <Route path={PATH.USERS}>
-                    <Route path={PATH.LIFESTYLE}>
-                      <Route index element={<LifestyleFormPage />} />
-                    </Route>
+                  <Route path={PATH.USERS} element={<ProfilePage />}></Route>
+                  <Route path={PATH.USERS_LIFESTYLE}>
+                    <Route index element={<LifestyleFormPage />} />
                   </Route>
                 </Route>
               </Routes>
