@@ -73,6 +73,11 @@ const Settings = ({profile, setProfile}) => {
       const response = await jwtAxios.put(API_USERS, body);
       const data = JSON.parse(response?.data || '{}');
 
+      // response.data가 없는 경우 에러 처리
+      if (data.constructor === Object && Object.keys(data).length === 0) {
+        throw new Error('서버가 불안정합니다. 문제가 계속될 시 문의바랍니다.');
+      }
+
       if (!data['errorCode']) {
         // 에러가 없는 경우 profile 상태를 최신화시킨다.
         setProfile(prevProfile => ({
@@ -132,6 +137,11 @@ const Settings = ({profile, setProfile}) => {
 
       const data = JSON.parse(response?.data || '{}');
 
+      // response.data가 없는 경우 에러 처리
+      if (data.constructor === Object && Object.keys(data).length === 0) {
+        throw new Error('서버가 불안정합니다. 문제가 계속될 시 문의바랍니다.');
+      }
+
       if (!data['errorCode']) {
         // 에러 코드가 없는 경우 profileImage 상태를 최신화한다.
         // FileReader 객체를 이용하여 파일 데이터를 base64로 인코딩
@@ -157,6 +167,11 @@ const Settings = ({profile, setProfile}) => {
       const response = await jwtAxios.delete(API_USERS);
 
       const data = JSON.parse(response?.data || '{}');
+
+      // response.data가 없는 경우 에러 처리
+      if (data.constructor === Object && Object.keys(data).length === 0) {
+        throw new Error('서버가 불안정합니다. 문제가 계속될 시 문의바랍니다.');
+      }
 
       if (!data['errorCode']) {
         return navigate(LOGOUT);

@@ -26,6 +26,11 @@ export const MemberProvider = ({children}) => {
       const data = JSON.parse(response?.data || '{}');
       const {name, nickname, email, mobile, gender, birthyear, birthday} = data;
 
+      // response.data가 없는 경우 에러 처리
+      if (data.constructor === Object && Object.keys(data).length === 0) {
+        throw new Error('서버가 불안정합니다. 문제가 계속될 시 문의바랍니다.');
+      }
+
       const member = {
         name,
         nickname,

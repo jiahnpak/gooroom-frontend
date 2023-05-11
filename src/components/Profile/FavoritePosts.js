@@ -15,6 +15,13 @@ const FavoritePosts = () => {
         const response = await jwtAxios.get();
         const data = JSON.parse(response?.data || '{}');
 
+        // response.data가 없는 경우 에러 처리
+        if (data.constructor === Object && Object.keys(data).length === 0) {
+          throw new Error(
+            '서버가 불안정합니다. 문제가 계속될 시 문의바랍니다.',
+          );
+        }
+
         // setFavoritePosts로 게시글 목록을 favoritePosts 상태에 배열로 저장
       } catch (err) {}
     };

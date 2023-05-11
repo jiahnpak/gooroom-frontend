@@ -49,6 +49,11 @@ const Signup = ({title}) => {
       const response = postSignup(body);
       const data = JSON.parse(response?.data || '{}');
 
+      // response.data가 없는 경우 에러 처리
+      if (data.constructor === Object && Object.keys(data).length === 0) {
+        throw new Error('서버가 불안정합니다. 문제가 계속될 시 문의바랍니다.');
+      }
+
       if (!data['errorCode']) {
         // 에러 코드가 없는 경우, 회원가입 성공
         setRefreshToken(data['Authorization-refresh']);

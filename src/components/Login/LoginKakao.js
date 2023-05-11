@@ -19,9 +19,12 @@ const LoginKakao = props => {
       const response = await customAxios.post(REDIRECT_URI_KAKAO, code);
       const data = JSON.parse(response?.data || '{}');
 
-      // access token과 refresh token을 서버에게 받아 저장한다.
-      setRefreshToken(data['Authorization-refresh']);
-      authDispatch({type: 'SET_TOKEN', token: data['Authorization']});
+      // data가 빈 객체가 아닌 경우
+      if (data.constructor === Object && Object.keys(data).length !== 0) {
+        // access token과 refresh token을 서버에게 받아 저장한다.
+        setRefreshToken(data['Authorization-refresh']);
+        authDispatch({type: 'SET_TOKEN', token: data['Authorization']});
+      }
 
       return navigate('/');
     };
