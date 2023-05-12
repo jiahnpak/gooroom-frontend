@@ -61,6 +61,7 @@ const useInterceptedAxios = () => {
           ] = `Bearer ${refreshToken}`;
           return customAxios(prevRequest);
         }
+        return Promise.reject(error);
       },
     );
 
@@ -70,6 +71,8 @@ const useInterceptedAxios = () => {
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [authState, authDispatch]);
+
+  return customAxios;
 };
 
 export default useInterceptedAxios;
