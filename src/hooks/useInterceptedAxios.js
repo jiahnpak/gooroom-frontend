@@ -5,7 +5,7 @@ import {getRefreshToken} from 'utils/RefreshToken';
 import useAlert from './useAlert';
 import {useNavigate} from 'react-router-dom';
 import {LOGIN} from 'constants/path';
-import errorCode from 'constants/errorCode';
+import CODE from 'constants/errorCode';
 
 const useInterceptedAxios = () => {
   const authState = useAuthState();
@@ -39,7 +39,7 @@ const useInterceptedAxios = () => {
       error => {
         const prevRequest = error?.config;
         if (
-          error?.response?.data?.errorCode === errorCode.INVALIDATE_TOKEN &&
+          error?.response?.data?.errorCode === CODE.INVALIDATE_TOKEN &&
           !prevRequest?.sent
         ) {
           // 토큰이 만료되었을 때 refreshToken을 헤더에 넣어서 제전송
