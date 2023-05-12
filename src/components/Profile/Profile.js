@@ -33,7 +33,7 @@ const Profile = () => {
   const tabButton = {
     title: '나는 이런 사람이에요',
     onClick: () => {
-      navigate(`${USERS_LIFESTYLE}/${profile.nickname}`);
+      navigate(`${USERS_LIFESTYLE}/${profile.member.nickname}`);
     },
   };
 

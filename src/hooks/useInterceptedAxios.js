@@ -29,6 +29,7 @@ const useInterceptedAxios = () => {
       response => {
         // useInterceptedAxios를 통한 요청에 대한 서버의 응답 데이터에 accessToken이 있다면 재발급된 것이므로 갱신
         const data = JSON.parse(response?.data || '{}');
+
         const accessToken = data['Authorization'];
         if (accessToken) {
           authDispatch({type: 'SET_TOKEN', token: accessToken});
