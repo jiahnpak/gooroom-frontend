@@ -6,10 +6,12 @@ import {REDIRECT_URI_NAVER} from 'constants/path';
 import customAxios from 'utils/customAxios';
 import {setRefreshToken} from 'utils/RefreshToken';
 import {useAuthDispatch} from 'hooks/useAuth';
+import useAlert from 'hooks/useAlert';
 
 const LoginNaver = props => {
   const navigate = useNavigate();
   const authDispatch = useAuthDispatch();
+  const showAlert = useAlert();
 
   const [searchParams, setSearchParams] = useSearchParams();
   const code = searchParams.get('code');
@@ -20,17 +22,27 @@ const LoginNaver = props => {
   // LoginNaver 컴포넌트가 처음 나타날 때 서버에 인가 코드를 보낸다.
   useEffect(() => {
     const postLoginNaver = async () => {
-      const response = await customAxios.post(REDIRECT_URI_NAVER, {
-        code,
-        state,
-      });
-      const data = JSON.parse(response?.data || '{}');
+      try {
+        const response = await customAxios.post(REDIRECT_URI_NAVER, {
+          code,
+          state,
+        });
 
-      // data가 빈 객체가 아닌 경우
-      if (data.constructor === Object && Object.keys(data).length !== 0) {
-        // access token과 refresh token을 서버에게 받아 저장한다.
-        setRefreshToken(data['Authorization-refresh']);
-        authDispatch({type: 'SET_TOKEN', token: data['Authorization']});
+        const accessToken = response?.headers['authorization'];
+        const refreshToken = response?.headers['authorization-refresh'];
+
+        if (!(accessToken && refreshToken)) {
+          throw new Error('토큰 생성에 실패했습니다.');
+        }
+
+        setRefreshToken(refreshToken);
+        authDispatch({type: 'SET_TOKEN', token: accessToken});
+      } catch (err) {
+        showAlert(
+          'danger',
+          '로그인에 실패했습니다. 잠시 후 시도해주세요.',
+          2000,
+        );
       }
 
       return navigate('/');

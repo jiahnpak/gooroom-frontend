@@ -17,7 +17,7 @@ const useInterceptedAxios = () => {
   useEffect(() => {
     const requestIntercept = customAxios.interceptors.request.use(
       config => {
-        // 모든 Request Header에 accessToken을 넣어주는 역할
+        // 모든 요청 헤더에 액세스 토큰을 'Authorization'으로 전달한다.
         if (!config.headers['Authorization']) {
           config.headers['Authorization'] = `Bearer ${authState.accessToken}`;
         }
@@ -27,10 +27,9 @@ const useInterceptedAxios = () => {
     );
     const responseIntercept = customAxios.interceptors.response.use(
       response => {
-        // useInterceptedAxios를 통한 요청에 대한 서버의 응답 데이터에 accessToken이 있다면 재발급된 것이므로 갱신
-        const data = JSON.parse(response?.data || '{}');
-
-        const accessToken = data['Authorization'];
+        // useInterceptedAxios를 통한 요청에 대한 서버의 응답 헤더에
+        // 'authorization'으로 액세스 토큰이 전달된다면 재발급된 것이므로 갱신한다.
+        const accessToken = response?.headers['authorization'];
         if (accessToken) {
           authDispatch({type: 'SET_TOKEN', token: accessToken});
         }
@@ -42,11 +41,11 @@ const useInterceptedAxios = () => {
           error?.response?.data?.errorCode === CODE.INVALIDATE_TOKEN &&
           !prevRequest?.sent
         ) {
-          // 토큰이 만료되었을 때 refreshToken을 헤더에 넣어서 제전송
+          // 토큰이 만료되었을 때 리프레시 토큰을 헤더에 넣어서 제전송
           prevRequest.sent = true;
           const refreshToken = getRefreshToken();
 
-          // refresh token도 만료된 경우 로그인 페이지로 이동
+          // 리프레시 토큰도 만료된 경우 로그인 페이지로 이동
           if (!refreshToken) {
             showAlert(
               'light',
@@ -56,6 +55,7 @@ const useInterceptedAxios = () => {
             return navigate(LOGIN);
           }
 
+          // 이전 요청 헤더에 리프레시 토큰을 'Authorization-refresh'로 전달한다.
           prevRequest.headers[
             'Authorization-refresh'
           ] = `Bearer ${refreshToken}`;
