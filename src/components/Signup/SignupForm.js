@@ -125,7 +125,7 @@ const SignupForm = ({formMethods, onSubmit, onInvalid}) => {
             className="d-inline-flex me-5"
             id="signupFormMale"
             type="radio"
-            value="MALE"
+            value="M"
             label="남성"
             {...register('gender')}
           />
@@ -133,7 +133,7 @@ const SignupForm = ({formMethods, onSubmit, onInvalid}) => {
             className="d-inline-flex"
             id="signupFormFemale"
             type="radio"
-            value="FEMALE"
+            value="F"
             label="여성"
             {...register('gender')}
           />

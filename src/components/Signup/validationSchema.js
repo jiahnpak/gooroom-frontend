@@ -61,7 +61,7 @@ export const validationSchema = yup.object().shape({
   gender: yup // 성별 확인
     .string()
     .required()
-    .oneOf(['MALE', 'FEMALE']),
+    .oneOf(['M', 'F']),
   birthdate: yup // 생년월일 확인
     .date()
     .required()
