@@ -4,7 +4,7 @@ import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import {BrandName} from './styles';
 import Button from 'components/common/Button';
-import {LOGIN, LOGOUT} from 'constants/path';
+import {LOGIN, LOGOUT, USERS} from 'constants/path';
 import useAuthState from 'hooks/useAuth';
 
 const Header = () => {
@@ -39,7 +39,7 @@ const Header = () => {
                   <Button variant="secondary" href={LOGOUT} className="mx-2">
                     로그아웃
                   </Button>
-                  <Button variant="primary" href="/" className="mx-2">
+                  <Button variant="primary" href={USERS} className="mx-2">
                     마이페이지
                   </Button>
                 </>

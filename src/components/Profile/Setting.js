@@ -70,31 +70,31 @@ const Settings = ({profile, setProfile}) => {
 
     try {
       // 서버에 비동기로 수정 요청을 보낸다.
-      const response = await jwtAxios.put(API_USERS, body);
-      const data = JSON.parse(response?.data || '{}');
-
-      // response.data가 없는 경우 에러 처리
-      if (data.constructor === Object && Object.keys(data).length === 0) {
-        throw new Error('서버가 불안정합니다. 문제가 계속될 시 문의바랍니다.');
+      const response = await jwtAxios.patch(API_USERS, body);
+      if (!response) {
+        throw new Error('서버와 연결이 불안정합니다.');
       }
 
-      if (!data['errorCode']) {
-        // 에러가 없는 경우 profile 상태를 최신화시킨다.
-        setProfile(prevProfile => ({
-          ...prevProfile,
-          member: {
-            ...prevProfile.member,
-            nickname,
-            mobile,
-          },
-        }));
-      }
+      // 에러가 없는 경우 profile 상태를 최신화시킨다.
+      setProfile(prevProfile => ({
+        ...prevProfile,
+        member: {
+          ...prevProfile.member,
+          nickname,
+          mobile,
+        },
+      }));
     } catch (err) {
-      showAlert(
-        'danger',
-        '연결이 불안정합니다. 잠시 후 다시 시도해주세요.',
-        2000,
-      );
+      const errorCode = err?.response?.data?.errorCode;
+
+      switch (errorCode) {
+        default: // 기타 에러에 대한 처리
+          showAlert(
+            'danger',
+            '서버와 연결이 불안정합니다. 잠시 후 시도해주세요.',
+            2000,
+          );
+      }
     }
   };
 
@@ -135,28 +135,34 @@ const Settings = ({profile, setProfile}) => {
         },
       });
 
-      const data = JSON.parse(response?.data || '{}');
-
-      // response.data가 없는 경우 에러 처리
-      if (data.constructor === Object && Object.keys(data).length === 0) {
-        throw new Error('서버가 불안정합니다. 문제가 계속될 시 문의바랍니다.');
+      if (!response) {
+        throw new Error('서버와 연결이 불안정합니다.');
       }
 
-      if (!data['errorCode']) {
-        // 에러 코드가 없는 경우 profileImage 상태를 최신화한다.
-        // FileReader 객체를 이용하여 파일 데이터를 base64로 인코딩
-        const reader = new FileReader();
-        reader.readAsDataURL(file);
-        reader.onload = () => {
-          const base64Image = reader.result;
-          // base64 데이터를 state에 저장
-          setProfile(prevProfile => ({
-            ...prevProfile,
-            profileImage: base64Image,
-          }));
-        };
+      // 에러 코드가 없는 경우 profileImage 상태를 최신화한다.
+      // FileReader 객체를 이용하여 파일 데이터를 base64로 인코딩
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => {
+        const base64Image = reader.result;
+        // base64 데이터를 state에 저장
+        setProfile(prevProfile => ({
+          ...prevProfile,
+          profileImage: base64Image,
+        }));
+      };
+    } catch (err) {
+      const errorCode = err?.response?.data?.errorCode;
+
+      switch (errorCode) {
+        default: // 기타 에러에 대한 처리
+          showAlert(
+            'danger',
+            '서버와 연결이 불안정합니다. 잠시 후 시도해주세요.',
+            2000,
+          );
       }
-    } catch (err) {}
+    }
   };
 
   /**

@@ -1,3 +1,4 @@
+import useAlert from 'hooks/useAlert';
 import useInterceptedAxios from 'hooks/useInterceptedAxios';
 import React from 'react';
 import {useState} from 'react';
@@ -6,6 +7,7 @@ import {Image, Table} from 'react-bootstrap';
 
 const PersonalPosts = () => {
   const jwtAxios = useInterceptedAxios();
+  const showAlert = useAlert();
   const [personalPosts, setPersonalPosts] = useState([]);
 
   useEffect(() => {
@@ -13,17 +15,23 @@ const PersonalPosts = () => {
     const getPersonalPosts = async () => {
       try {
         const response = await jwtAxios.get();
-        const data = JSON.parse(response?.data || '{}');
-
-        // response.data가 없는 경우 에러 처리
-        if (data.constructor === Object && Object.keys(data).length === 0) {
-          throw new Error(
-            '서버가 불안정합니다. 문제가 계속될 시 문의바랍니다.',
-          );
+        if (!response) {
+          throw new Error('서버와 연결이 불안정합니다.');
         }
 
         // setPersonalPosts로 게시글 목록을 personalPosts 상태에 배열로 저장
-      } catch (err) {}
+      } catch (err) {
+        const errorCode = err?.response?.data?.errorCode;
+
+        switch (errorCode) {
+          default: // 기타 에러에 대한 처리
+            showAlert(
+              'danger',
+              '서버와 연결이 불안정합니다. 잠시 후 시도해주세요.',
+              2000,
+            );
+        }
+      }
     };
     getPersonalPosts();
   }, [jwtAxios]);
