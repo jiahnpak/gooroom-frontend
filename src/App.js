@@ -22,65 +22,71 @@ import {ProfileImageProvider} from 'contexts/ProfileImageContext';
 import Provider from 'components/common/Provider/Provider';
 import LoginNaver from 'components/Login/LoginNaver';
 import {LifestyleProvider} from 'contexts/LifestyleContext';
+import {RecoilRoot} from 'recoil';
 
 const App = () => {
   return (
     <>
-      <ThemeProvider theme={theme}>
-        <GlobalStyle />
-        <CookiesProvider>
-          <AuthProvider>
-            <AlertProvider>
-              <Routes>
-                <Route path="/" element={<Layout />}>
-                  <Route index element={<MainPage />} />
-                  <Route path={PATH.LOGIN} element={<LoginPage />} />
-                  <Route path={PATH.LOGIN_EMAIL} element={<LoginEmailPage />} />
-                  <Route path={PATH.LOGOUT} element={<Logout />} />
-                  <Route
-                    path={PATH.REDIRECT_URI_KAKAO}
-                    element={<LoginKakao />}
-                  />
-                  <Route
-                    path={PATH.REDIRECT_URI_NAVER}
-                    element={<LoginNaver />}
-                  />
-                  <Route path={PATH.SIGNUP} element={<SignupPage />} />
-                  <Route
-                    element={
-                      <Provider
-                        providers={[MemberProvider, ProfileImageProvider]}
-                      />
-                    }
-                  >
-                    <Route path={PATH.USERS} element={<ProfilePage />} />
-                  </Route>
-                  <Route
-                    element={
-                      <Provider
-                        providers={[
-                          MemberProvider,
-                          ProfileImageProvider,
-                          LifestyleProvider,
-                        ]}
-                      />
-                    }
-                  >
+      <RecoilRoot>
+        <ThemeProvider theme={theme}>
+          <GlobalStyle />
+          <CookiesProvider>
+            <AuthProvider>
+              <AlertProvider>
+                <Routes>
+                  <Route path="/" element={<Layout />}>
+                    <Route index element={<MainPage />} />
+                    <Route path={PATH.LOGIN} element={<LoginPage />} />
                     <Route
-                      path={`${PATH.USERS_LIFESTYLE}/:nickname`}
-                      element={<LifestylePage />}
+                      path={PATH.LOGIN_EMAIL}
+                      element={<LoginEmailPage />}
+                    />
+                    <Route path={PATH.LOGOUT} element={<Logout />} />
+                    <Route
+                      path={PATH.REDIRECT_URI_KAKAO}
+                      element={<LoginKakao />}
                     />
                     <Route
-                      path={PATH.USERS_LIFESTYLE}
-                      element={<LifestyleFormPage />}
+                      path={PATH.REDIRECT_URI_NAVER}
+                      element={<LoginNaver />}
                     />
+                    <Route path={PATH.SIGNUP} element={<SignupPage />} />
+                    <Route
+                      element={
+                        <Provider
+                          providers={[MemberProvider, ProfileImageProvider]}
+                        />
+                      }
+                    >
+                      <Route path={PATH.USERS} element={<ProfilePage />} />
+                    </Route>
+                    <Route
+                      element={
+                        <Provider
+                          providers={[
+                            MemberProvider,
+                            ProfileImageProvider,
+                            LifestyleProvider,
+                          ]}
+                        />
+                      }
+                    >
+                      <Route
+                        path={`${PATH.USERS_LIFESTYLE}/:nickname`}
+                        element={<LifestylePage />}
+                      />
+                      <Route
+                        path={PATH.USERS_LIFESTYLE}
+                        element={<LifestyleFormPage />}
+                      />
+                    </Route>
                   </Route>
-                </Route>
-              </Routes>
-            </AlertProvider>
-          </AuthProvider>
-        </CookiesProvider>
-      </ThemeProvider>
+                </Routes>
+              </AlertProvider>
+            </AuthProvider>
+          </CookiesProvider>
+        </ThemeProvider>
+      </RecoilRoot>
     </>
   );
 };

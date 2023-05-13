@@ -1,17 +1,18 @@
 import {useNavigate} from 'react-router-dom';
 import useAlert from './useAlert';
-import useAuthState from './useAuth';
 import {useCallback} from 'react';
 import {LOGIN} from 'constants/path';
 import {useEffect} from 'react';
+import {useRecoilValue} from 'recoil';
+import {AuthState} from 'stores/AuthState';
 
 const useAuthRedirect = () => {
-  const authState = useAuthState();
+  const auth = useRecoilValue(AuthState);
   const showAlert = useAlert();
   const navigate = useNavigate();
 
   const redirectIfNotAuthenticated = useCallback(() => {
-    if (!authState.authenticated) {
+    if (!auth.authenticated) {
       showAlert(
         'warning',
         '인증이 필요한 서비스입니다. 로그인 후 이용해주세요.',
@@ -19,7 +20,7 @@ const useAuthRedirect = () => {
       );
       navigate(LOGIN, {replace: true});
     }
-  }, [authState.authenticated, navigate, showAlert]);
+  }, [auth.authenticated]);
 
   useEffect(() => {
     redirectIfNotAuthenticated();

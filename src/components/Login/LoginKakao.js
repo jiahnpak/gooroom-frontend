@@ -5,12 +5,13 @@ import {useEffect} from 'react';
 import {REDIRECT_URI_KAKAO} from 'constants/path';
 import customAxios from 'utils/customAxios';
 import {setRefreshToken} from 'utils/RefreshToken';
-import {useAuthDispatch} from 'hooks/useAuth';
 import useAlert from 'hooks/useAlert';
+import {useSetRecoilState} from 'recoil';
+import {AuthState} from 'stores/AuthState';
 
 const LoginKakao = props => {
   const navigate = useNavigate();
-  const authDispatch = useAuthDispatch();
+  const setAuth = useSetRecoilState(AuthState);
   const showAlert = useAlert();
 
   const code = new URL(window.location.href).searchParams.get('code');
@@ -29,7 +30,7 @@ const LoginKakao = props => {
         }
 
         setRefreshToken(refreshToken);
-        authDispatch({type: 'SET_TOKEN', token: accessToken});
+        setAuth({authenticated: true, accessToken: accessToken});
       } catch (err) {
         showAlert(
           'danger',

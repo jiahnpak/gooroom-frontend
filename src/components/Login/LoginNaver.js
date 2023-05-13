@@ -5,12 +5,13 @@ import {useEffect} from 'react';
 import {REDIRECT_URI_NAVER} from 'constants/path';
 import customAxios from 'utils/customAxios';
 import {setRefreshToken} from 'utils/RefreshToken';
-import {useAuthDispatch} from 'hooks/useAuth';
 import useAlert from 'hooks/useAlert';
+import {useSetRecoilState} from 'recoil';
+import {AuthState} from 'stores/AuthState';
 
 const LoginNaver = props => {
   const navigate = useNavigate();
-  const authDispatch = useAuthDispatch();
+  const setAuth = useSetRecoilState(AuthState);
   const showAlert = useAlert();
 
   const [searchParams, setSearchParams] = useSearchParams();
@@ -36,7 +37,7 @@ const LoginNaver = props => {
         }
 
         setRefreshToken(refreshToken);
-        authDispatch({type: 'SET_TOKEN', token: accessToken});
+        setAuth({authenticate: true, accessToken: accessToken});
       } catch (err) {
         showAlert(
           'danger',

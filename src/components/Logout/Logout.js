@@ -1,16 +1,17 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import {useAuthDispatch} from 'hooks/useAuth';
 import {useEffect} from 'react';
 import {Link, useNavigate} from 'react-router-dom';
+import {useSetRecoilState} from 'recoil';
+import {AuthState} from 'stores/AuthState';
 import {removeCookieToken} from 'utils/RefreshToken';
 
 const Logout = () => {
-  const authDispatch = useAuthDispatch();
+  const setAuth = useSetRecoilState(AuthState);
   const navigate = useNavigate();
 
   const logout = () => {
     removeCookieToken();
-    authDispatch({type: 'DELETE_TOKEN'});
+    setAuth({authenticated: false, accessToken: null});
     return navigate('/');
   };
 

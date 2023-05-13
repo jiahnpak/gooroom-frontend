@@ -5,10 +5,11 @@ import Navbar from 'react-bootstrap/Navbar';
 import {BrandName} from './styles';
 import Button from 'components/common/Button';
 import {LOGIN, LOGOUT, USERS} from 'constants/path';
-import useAuthState from 'hooks/useAuth';
+import {useRecoilValue} from 'recoil';
+import {AuthState} from 'stores/AuthState';
 
 const Header = () => {
-  const authState = useAuthState();
+  const auth = useRecoilValue(AuthState);
 
   return (
     <header>
@@ -33,7 +34,7 @@ const Header = () => {
               <Nav.Link href="/">룸메 구하기</Nav.Link>
               <Nav.Link href="/">방 구하기</Nav.Link>
               <Nav.Link href="/">커뮤니티</Nav.Link>
-              {authState.authenticated ? (
+              {auth.authenticated ? (
                 <>
                   <Nav.Link href="/">채팅</Nav.Link>
                   <Button variant="secondary" href={LOGOUT} className="mx-2">
