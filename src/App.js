@@ -23,6 +23,7 @@ import Provider from 'components/common/Provider/Provider';
 import LoginNaver from 'components/Login/LoginNaver';
 import {LifestyleProvider} from 'contexts/LifestyleContext';
 import {RecoilRoot} from 'recoil';
+import NotFoundPage from 'pages/NotFoundPage';
 
 const App = () => {
   return (
@@ -81,6 +82,7 @@ const App = () => {
                       />
                     </Route>
                   </Route>
+                  <Route path="*" element={<NotFoundPage />} />
                 </Routes>
               </AlertProvider>
             </AuthProvider>
