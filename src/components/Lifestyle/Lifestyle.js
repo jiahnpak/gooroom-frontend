@@ -42,9 +42,9 @@ const Lifestyle = ({
             <StyledProfileMeta>
               {member.gender &&
                 `성별: ${
-                  member.gender === 'MALE'
+                  member.gender === 'M'
                     ? '남자 '
-                    : member.gender === 'FEMALE'
+                    : member.gender === 'F'
                     ? '여자 '
                     : ''
                 }`}{' '}
