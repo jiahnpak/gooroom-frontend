@@ -73,14 +73,14 @@ const App = () => {
                       }
                     >
                       <Route
-                        path={`${PATH.USERS_LIFESTYLE}/:nickname`}
-                        element={<LifestylePage />}
-                      />
-                      <Route
                         path={PATH.USERS_LIFESTYLE}
                         element={<LifestyleFormPage />}
                       />
                     </Route>
+                    <Route
+                      path={`${PATH.USERS_LIFESTYLE}/:nickname`}
+                      element={<LifestylePage />}
+                    />
                   </Route>
                   <Route path="*" element={<NotFoundPage />} />
                 </Routes>
