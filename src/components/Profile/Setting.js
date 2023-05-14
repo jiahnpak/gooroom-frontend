@@ -1,5 +1,5 @@
 import Button from 'components/common/Button/Button';
-import {nameMax, nameMin} from 'constants/validation';
+import {nameMax, nameMin, pwdMax} from 'constants/validation';
 import {Col, Form, Image, Modal, Row} from 'react-bootstrap';
 import {FaRegEdit} from 'react-icons/fa';
 import {useRef} from 'react';
@@ -7,7 +7,7 @@ import useInterceptedAxios from 'hooks/useInterceptedAxios';
 import {useState} from 'react';
 import {useForm} from 'react-hook-form';
 import {yupResolver} from '@hookform/resolvers/yup';
-import {validationSchema} from './validationSchema';
+import {profileSchema, withdrawalSchema} from './validationSchema';
 import {
   StyledDescription,
   StyledForm,
@@ -28,15 +28,23 @@ const Settings = ({memberMethods, profileImageMethods}) => {
   const {profileImage, setProfileImage} = profileImageMethods;
 
   const {
-    register,
-    handleSubmit,
-    formState: {errors},
+    register: profileRegister,
+    handleSubmit: handleProfileSubmit,
+    formState: {errors: profileErrors},
   } = useForm({
     defaultValues: {
       nickname: member.nickname,
       mobile: member.mobile,
     },
-    resolver: yupResolver(validationSchema),
+    resolver: yupResolver(profileSchema),
+  });
+
+  const {
+    register: withdrawalRegister,
+    handleSubmit: handleWithdrawalSubmit,
+    formState: {errors: withdrawalErrors},
+  } = useForm({
+    resolver: yupResolver(withdrawalSchema),
   });
 
   const showAlert = useAlert();
@@ -172,13 +180,17 @@ const Settings = ({memberMethods, profileImageMethods}) => {
   /**
    * 계정 삭제 버튼을 누를 시 수행되는 함수이다.
    */
-  const onClickWithdraw = async () => {
+  const onSubmitWithdrawal = async data => {
+    const {checkPassword} = data;
     try {
-      const response = await jwtAxios.delete(API_USERS);
+      const response = await jwtAxios.delete(API_USERS, {
+        data: {checkPassword},
+      });
       if (!response) {
         throw new Error('계정 삭제 실패');
       }
 
+      showAlert('success', '성공적으로 탈퇴되었습니다.', 2000);
       return navigate(LOGOUT);
     } catch (err) {
       const errorCode = err?.response?.data?.errorCode;
@@ -202,7 +214,11 @@ const Settings = ({memberMethods, profileImageMethods}) => {
           <StyledSettingBody>
             <Row className="gap-5">
               <Col sm={4}>
-                <StyledForm onSubmit={handleSubmit(onSubmit, onInvalid)}>
+                {/* 프로필 수정하기 폼 */}
+                <StyledForm
+                  onSubmit={handleProfileSubmit(onSubmit, onInvalid)}
+                  noValidate
+                >
                   <Form.Group className="mb-5">
                     <Form.Label>닉네임</Form.Label>
                     <Form.Control
@@ -210,8 +226,8 @@ const Settings = ({memberMethods, profileImageMethods}) => {
                       minLength={nameMin}
                       maxLength={nameMax}
                       placeholder="닉네임을 입력해주세요."
-                      isInvalid={!!errors.nickname}
-                      {...register('nickname')}
+                      isInvalid={!!profileErrors.nickname}
+                      {...profileRegister('nickname')}
                     />
                   </Form.Group>
                   <Form.Group className="mb-5">
@@ -235,6 +251,7 @@ const Settings = ({memberMethods, profileImageMethods}) => {
                 </StyledForm>
               </Col>
               <Col sm={4} className="ms-auto">
+                {/* 프로필 사진 변경 폼 */}
                 <Form>
                   <Form.Label className="d-block">프로필 사진</Form.Label>
                   <Form.Group className="position-relative">
@@ -283,6 +300,7 @@ const Settings = ({memberMethods, profileImageMethods}) => {
             >
               계정 삭제
             </Button>
+            {/* 계정 삭제 모달 */}
             <Modal
               show={withdrawModalShow}
               onHide={closeWithdrawModal}
@@ -292,39 +310,57 @@ const Settings = ({memberMethods, profileImageMethods}) => {
                 <Modal.Title>정말로 삭제하시겠습니까?</Modal.Title>
               </Modal.Header>
               <Modal.Body>
-                <Row>
-                  <Col>
-                    <Button
-                      variant="danger"
-                      size="lg"
-                      onClick={onClickWithdraw}
-                      style={{
-                        fontSize: '1rem',
-                        width: '100%',
-                      }}
-                    >
-                      계정 삭제
-                    </Button>
-                  </Col>
-                  <Col>
-                    <Button
-                      variant="primary"
-                      size="lg"
-                      onClick={closeWithdrawModal}
-                      style={{
-                        fontSize: '1rem',
-                        width: '100%',
-                      }}
-                    >
-                      취소하기
-                    </Button>
-                  </Col>
-                </Row>
+                <Form
+                  onSubmit={handleWithdrawalSubmit(onSubmitWithdrawal)}
+                  noValidate
+                >
+                  <Row className="mb-3">
+                    <Form.Group>
+                      <Form.Label>비밀번호를 입력해주세요</Form.Label>
+                      <Form.Control
+                        type="password"
+                        placeholder="비밀번호를 입력해주세요."
+                        maxLength={pwdMax}
+                        isInvalid={!!withdrawalErrors.checkPassword}
+                        {...withdrawalRegister('checkPassword')}
+                      />
+                    </Form.Group>
+                  </Row>
+                  <Row>
+                    <Col>
+                      <Button
+                        variant="danger"
+                        size="lg"
+                        type="submit"
+                        style={{
+                          fontSize: '1rem',
+                          width: '100%',
+                        }}
+                      >
+                        계정 삭제
+                      </Button>
+                    </Col>
+                    <Col>
+                      <Button
+                        variant="primary"
+                        size="lg"
+                        onClick={closeWithdrawModal}
+                        style={{
+                          fontSize: '1rem',
+                          width: '100%',
+                        }}
+                      >
+                        취소하기
+                      </Button>
+                    </Col>
+                  </Row>
+                </Form>
               </Modal.Body>
             </Modal>
           </StyledSettingBody>
         </StyledSetting>
       </StyledSettings>
+      {/* 전화번호 인증 모달 */}
       <Modal
         show={mobileModalShow}
         onHide={closeMobileModal}
@@ -342,9 +378,9 @@ const Settings = ({memberMethods, profileImageMethods}) => {
                 <Form.Control
                   type="text"
                   placeholder="전화번호를 입력해주세요."
-                  isInvalid={!!errors.mobile}
+                  isInvalid={!!profileErrors.mobile}
                   autoFocus
-                  {...register('mobile')}
+                  {...profileRegister('mobile')}
                 />
               </Col>
               <Col sm="auto">
