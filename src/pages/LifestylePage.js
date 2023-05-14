@@ -9,14 +9,14 @@ import NotFoundPage from './NotFoundPage';
 import {useState} from 'react';
 import Loading from 'components/common/Loading/Loading';
 import CODE from 'constants/errorCode';
-import {USERS_LIFESTYLE} from 'constants/path';
-import useAuthRedirect from 'hooks/useAuthRedirect';
+import {LOGIN, USERS_LIFESTYLE} from 'constants/path';
 
 const LifestylePage = () => {
   const title = '나는 이런 사람이에요!';
   const {nickname} = useParams();
 
   const [loading, setLoading] = useState(true);
+  const [isLoggedIn, setIsLoggedIn] = useState(true);
   const [hasLifestyle, setHasLifestyle] = useState(true);
 
   const {member, getMember} = useMember(); // 닉네임으로 Member 찾기 필요
@@ -24,16 +24,19 @@ const LifestylePage = () => {
   const {lifestyle, getLifestyle} = useLifestyle(); // 지정된 닉네임을 가진 사용자의 기본 정보 및 성향 정보
   const {profileImage, getProfileImage} = useProfileImage(); // 지정된 닉네임을 가진 사용자의 프로필 이미지
 
-  useAuthRedirect();
-
   // 컴포넌트가 마운트될 때 지정된 닉네임을 가진 사용자 생활 패턴을 서버에게 받아온다.
   useEffect(() => {
     const getDatas = async () => {
       await getMember();
 
-      await getLoginMember();
+      const loginMemberCode = await getLoginMember();
       const lifestyleCode = await getLifestyle(nickname);
       await getProfileImage(nickname);
+
+      // 로그인 중인 사용자가 아닌 경우
+      if (loginMemberCode === CODE.NOT_FOUND_MEMBER) {
+        setIsLoggedIn(false);
+      }
 
       // lifestyle이 없는 경우
       if (lifestyleCode === CODE.NOT_FOUND_MEMBER) {
@@ -48,6 +51,11 @@ const LifestylePage = () => {
   // 서버에서 데이터를 가져오는 중에는 로딩화면 렌더링
   if (loading) {
     return <Loading />;
+  }
+
+  // 로그인 하지 않은 사용자인 경우 로그인 페이지로 리다이렉트
+  if (!isLoggedIn) {
+    return <Navigate to={LOGIN} replace={true} />;
   }
 
   if (!hasLifestyle) {
