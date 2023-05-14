@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import {useNavigate, useSearchParams} from 'react-router-dom';
-import Loading from './Loading';
+import Loading from 'components/common/Loading';
 import {useEffect} from 'react';
 import {REDIRECT_URI_NAVER} from 'constants/path';
 import customAxios from 'utils/customAxios';
