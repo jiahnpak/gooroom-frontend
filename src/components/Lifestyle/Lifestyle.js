@@ -15,7 +15,7 @@ import {
   organizeType,
   sleepingHabitType,
   smokingType,
-  wakeupTime,
+  wakeupType,
 } from 'constants/lifestyleList';
 import Button from 'components/common/Button/Button';
 import {useNavigate} from 'react-router-dom';
@@ -93,9 +93,9 @@ const Lifestyle = ({
               {lifestyle.sleepingHabitType && sleepingHabitType.placeholder}
             </StyledParagraph>
             <StyledParagraph>
-              {lifestyle.wakeupTime &&
-                wakeupTime.options.find(
-                  option => option.value === lifestyle.wakeupTime,
+              {lifestyle.wakeupType &&
+                wakeupType.options.find(
+                  option => option.value === lifestyle.wakeupType,
                 ).label}
             </StyledParagraph>
           </Col>

@@ -5,7 +5,7 @@ import {
   smokingType,
   drinkingType,
   sleepingHabitType,
-  wakeupTime,
+  wakeupType,
   organizeType,
   cleanupType,
   introduce,
@@ -31,7 +31,7 @@ const LifestyleForm = ({member, lifestyle}) => {
       [smokingType.name]: lifestyle.smokingType,
       [drinkingType.name]: lifestyle.drinkingType,
       [sleepingHabitType.name]: lifestyle.sleepingHabitType,
-      [wakeupTime.name]: lifestyle.wakeupTime,
+      [wakeupType.name]: lifestyle.wakeupType,
       [organizeType.name]: lifestyle.organizeType,
       [cleanupType.name]: lifestyle.cleanupType,
       [introduce.name]: lifestyle.introduce,
@@ -132,16 +132,16 @@ const LifestyleForm = ({member, lifestyle}) => {
                 {...register(sleepingHabitType.name)}
               />
             </Form.Group>
-            <Form.Group className="mb-3" controlId="lifestyleFormWakeupTime">
+            <Form.Group className="mb-3" controlId="lifestyleFormWakeupType">
               <Form.Text className="mb-1" as="label">
-                {wakeupTime.label}
+                {wakeupType.label}
               </Form.Text>
               <Form.Select
-                isInvalid={!!errors[wakeupTime.name]}
-                {...register(wakeupTime.name)}
+                isInvalid={!!errors[wakeupType.name]}
+                {...register(wakeupType.name)}
               >
-                <option value="">{wakeupTime.placeholder}</option>
-                {wakeupTime.options.map(option => (
+                <option value="">{wakeupType.placeholder}</option>
+                {wakeupType.options.map(option => (
                   <option key={option.value} value={option.value}>
                     {option.label}
                   </option>
