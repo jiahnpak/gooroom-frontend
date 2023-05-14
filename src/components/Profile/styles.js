@@ -10,8 +10,18 @@ export const StyledProfile = styled.div`
   padding-top: 2rem;
 `;
 
+export const StyledProfileNameBlock = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+`;
+
 export const StyledProfileName = styled.h2`
   font-size: 1.25rem;
+`;
+
+export const StyledProfileNickname = styled.h3`
+  font-size: 1rem;
 `;
 
 export const StyledSettings = styled.div`

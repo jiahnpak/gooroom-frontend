@@ -83,6 +83,8 @@ const Settings = ({memberMethods, profileImageMethods}) => {
         nickname,
         mobile,
       }));
+
+      showAlert('success', '성공적으로 수정하였습니다.', 2000);
     } catch (err) {
       const errorCode = err?.response?.data?.errorCode;
 
@@ -123,6 +125,7 @@ const Settings = ({memberMethods, profileImageMethods}) => {
 
     try {
       const method = profileImage === PROFILE_IMAGE ? 'post' : 'patch';
+      console.log(method);
       // 파일을 서버에 업로드한다.
       const response = await jwtAxios({
         method: method,
@@ -150,6 +153,8 @@ const Settings = ({memberMethods, profileImageMethods}) => {
           profileImage: base64Image,
         }));
       };
+
+      showAlert('success', '성공적으로 수정하였습니다.', 2000);
     } catch (err) {
       const errorCode = err?.response?.data?.errorCode;
 

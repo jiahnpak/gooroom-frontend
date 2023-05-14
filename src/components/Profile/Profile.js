@@ -1,6 +1,11 @@
 import {useEffect} from 'react';
 import {Image} from 'react-bootstrap';
-import {StyledProfile, StyledProfileName} from './styles';
+import {
+  StyledProfile,
+  StyledProfileName,
+  StyledProfileNameBlock,
+  StyledProfileNickname,
+} from './styles';
 import Tabs from 'components/common/Tabs';
 import {useNavigate} from 'react-router-dom';
 import {USERS_LIFESTYLE} from 'constants/path';
@@ -40,7 +45,10 @@ const Profile = ({memberMethods}) => {
   return (
     <StyledProfile>
       <Image roundedCircle width="128" height="auto" src={profileImage} />
-      <StyledProfileName>{member.name}</StyledProfileName>
+      <StyledProfileNameBlock>
+        <StyledProfileName>{member.name}</StyledProfileName>
+        <StyledProfileNickname>({member.nickname})</StyledProfileNickname>
+      </StyledProfileNameBlock>
       <Tabs tabList={tabList} tabButton={tabButton}>
         <PersonalPosts />
         <Settings
