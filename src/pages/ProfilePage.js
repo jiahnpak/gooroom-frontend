@@ -6,8 +6,10 @@ import useMember from 'hooks/useMember';
 import {useEffect} from 'react';
 import {useState} from 'react';
 import {Navigate} from 'react-router-dom';
+import UnexpectedPage from './UnexpectedPage';
 
 const ProfilePage = () => {
+  const [unexpectedError, setUnexpectedError] = useState(false);
   const [loading, setLoading] = useState(true);
   const [isLoggedIn, setIsLoggedIn] = useState(true);
 
@@ -16,16 +18,26 @@ const ProfilePage = () => {
 
   useEffect(() => {
     const getDatas = async () => {
-      const memberCode = await getMember();
+      const response = await getMember();
 
-      if (memberCode === CODE.NOT_FOUND_MEMBER) {
-        setIsLoggedIn(false);
+      switch (response) {
+        case CODE.INVALIDATE_TOKEN:
+          setIsLoggedIn(false);
+          break;
+        case CODE.UNEXPECTED:
+          setUnexpectedError(true);
+          break;
+        default:
       }
 
       setLoading(false);
     };
     getDatas();
   }, []);
+
+  if (unexpectedError) {
+    return <UnexpectedPage />;
+  }
 
   // 서버에서 데이터를 가져오는 중에는 로딩화면 렌더링
   if (loading) {

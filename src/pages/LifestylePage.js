@@ -10,11 +10,13 @@ import {useState} from 'react';
 import Loading from 'components/common/Loading/Loading';
 import CODE from 'constants/errorCode';
 import {LOGIN, USERS_LIFESTYLE} from 'constants/path';
+import UnexpectedPage from './UnexpectedPage';
 
 const LifestylePage = () => {
   const title = '나는 이런 사람이에요!';
   const {nickname} = useParams();
 
+  const [unexpectedError, setUnexpectedError] = useState(false);
   const [loading, setLoading] = useState(true);
   const [isLoggedIn, setIsLoggedIn] = useState(true);
   const [hasLifestyle, setHasLifestyle] = useState(true);
@@ -30,23 +32,43 @@ const LifestylePage = () => {
       await getMember();
 
       const loginMemberCode = await getLoginMember();
-      const lifestyleCode = await getLifestyle(nickname);
-      await getProfileImage(nickname);
-
-      // 로그인 중인 사용자가 아닌 경우
-      if (loginMemberCode === CODE.NOT_FOUND_MEMBER) {
-        setIsLoggedIn(false);
+      switch (loginMemberCode) {
+        case CODE.INVALIDATE_TOKEN:
+          setIsLoggedIn(false);
+          break;
+        case CODE.UNEXPECTED:
+          setUnexpectedError(true);
+          break;
+        default:
       }
 
-      // lifestyle이 없는 경우
-      if (lifestyleCode === CODE.NOT_FOUND_MEMBER) {
-        setHasLifestyle(false);
+      const lifestyleCode = await getLifestyle(nickname);
+      switch (lifestyleCode) {
+        case CODE.NOT_FOUND_MEMBER:
+          setHasLifestyle(false);
+          break;
+        case CODE.UNEXPECTED:
+          setUnexpectedError(true);
+          break;
+        default:
+      }
+
+      const profileImageCode = await getProfileImage(nickname);
+      switch (profileImageCode) {
+        case CODE.UNEXPECTED:
+          setUnexpectedError(true);
+          break;
+        default:
       }
 
       setLoading(false);
     };
     getDatas();
   }, [nickname]);
+
+  if (unexpectedError) {
+    return <UnexpectedPage />;
+  }
 
   // 서버에서 데이터를 가져오는 중에는 로딩화면 렌더링
   if (loading) {

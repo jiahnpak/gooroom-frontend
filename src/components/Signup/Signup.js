@@ -15,7 +15,7 @@ const Signup = ({title}) => {
   const formMethods = useForm({
     resolver: yupResolver(validationSchema),
   });
-  const {setError} = formMethods;
+  const {setError, setFocus} = formMethods;
 
   // 페이지 이동을 위해 사용
   const navigate = useNavigate();
@@ -56,12 +56,14 @@ const Signup = ({title}) => {
       switch (errorCode) {
         case CODE.ALREADY_EXIST_USER_EMAIL: // 중복된 이메일을 입력할 때의 에러 처리
           setError('email', {type: 'custom', message: ERRORS.DUPLICATE_EMAIL});
+          setFocus('email');
           break;
         case CODE.ALREADY_EXIST_USER_NICKNAME: // 중복된 닉네임을 입력할 때의 에러 처리
           setError('nickname', {
             type: 'custom',
             message: ERRORS.DUPLICATE_NICKNAME,
           });
+          setFocus('nickname');
           break;
         default: // 기타 에러에 대한 처리
           showAlert(

@@ -8,11 +8,13 @@ import useMember from 'hooks/useMember';
 import {useState} from 'react';
 import {useEffect} from 'react';
 import {Navigate} from 'react-router-dom';
+import UnexpectedPage from './UnexpectedPage';
 
 const LifestyleFormPage = () => {
   const title = '당신은 어떤 사람인가요?';
   const description = `생활 패턴, 청소 주기, MBTI까지, \n당신이 찾아 헤맨 완벽한 친구를 구해줄게요.`;
 
+  const [unexpectedError, setUnexpectedError] = useState(false);
   const [loading, setLoading] = useState(true);
   const [isLoggedIn, setIsLoggedIn] = useState(true);
 
@@ -23,15 +25,25 @@ const LifestyleFormPage = () => {
     const getDatas = async () => {
       const response = await getMember();
 
-      if (response === CODE.NOT_FOUND_MEMBER) {
-        setIsLoggedIn(false);
-      } else {
-        await getLifestyle(response?.nickname);
+      switch (response) {
+        case CODE.INVALIDATE_TOKEN:
+          setIsLoggedIn(false);
+          break;
+        case CODE.UNEXPECTED:
+          setUnexpectedError(true);
+          break;
+        default:
+          await getLifestyle(response?.nickname);
       }
+
       setLoading(false);
     };
     getDatas();
   }, []);
+
+  if (unexpectedError) {
+    return <UnexpectedPage />;
+  }
 
   // 서버에서 데이터를 가져오는 중에는 로딩화면 렌더링
   if (loading) {
