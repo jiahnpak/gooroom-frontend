@@ -52,15 +52,7 @@ const App = () => {
                       element={<LoginNaver />}
                     />
                     <Route path={PATH.SIGNUP} element={<SignupPage />} />
-                    <Route
-                      element={
-                        <Provider
-                          providers={[MemberProvider, ProfileImageProvider]}
-                        />
-                      }
-                    >
-                      <Route path={PATH.USERS} element={<ProfilePage />} />
-                    </Route>
+                    <Route path={PATH.USERS} element={<ProfilePage />} />
                     <Route
                       element={
                         <Provider

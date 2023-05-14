@@ -11,7 +11,8 @@ const ProfilePage = () => {
   const [loading, setLoading] = useState(true);
   const [isLoggedIn, setIsLoggedIn] = useState(true);
 
-  const {member, getMember} = useMember();
+  const memberMethods = useMember();
+  const {getMember} = memberMethods;
 
   useEffect(() => {
     const getDatas = async () => {
@@ -36,7 +37,7 @@ const ProfilePage = () => {
     return <Navigate to={LOGIN} replace={true} />;
   }
 
-  return <Profile></Profile>;
+  return <Profile memberMethods={memberMethods}></Profile>;
 };
 
 export default ProfilePage;

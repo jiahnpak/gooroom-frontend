@@ -22,8 +22,10 @@ import useAlert from 'hooks/useAlert';
 import {useNavigate} from 'react-router-dom';
 import {LOGOUT} from 'constants/path';
 
-const Settings = ({profile, setProfile}) => {
+const Settings = ({memberMethods, profileImageMethods}) => {
   const jwtAxios = useInterceptedAxios();
+  const {member, setMember} = memberMethods;
+  const {profileImage, setProfileImage} = profileImageMethods;
 
   const {
     register,
@@ -31,8 +33,8 @@ const Settings = ({profile, setProfile}) => {
     formState: {errors},
   } = useForm({
     defaultValues: {
-      nickname: profile.member.nickname,
-      mobile: profile.member.mobile,
+      nickname: member.nickname,
+      mobile: member.mobile,
     },
     resolver: yupResolver(validationSchema),
   });
@@ -76,13 +78,10 @@ const Settings = ({profile, setProfile}) => {
       }
 
       // 에러가 없는 경우 profile 상태를 최신화시킨다.
-      setProfile(prevProfile => ({
-        ...prevProfile,
-        member: {
-          ...prevProfile.member,
-          nickname,
-          mobile,
-        },
+      setMember(prevMember => ({
+        ...prevMember,
+        nickname,
+        mobile,
       }));
     } catch (err) {
       const errorCode = err?.response?.data?.errorCode;
@@ -123,7 +122,7 @@ const Settings = ({profile, setProfile}) => {
     formData.append('file', file);
 
     try {
-      const method = profile.profileImage === PROFILE_IMAGE ? 'post' : 'patch';
+      const method = profileImage === PROFILE_IMAGE ? 'post' : 'patch';
       // 파일을 서버에 업로드한다.
       const response = await jwtAxios({
         method: method,
@@ -146,8 +145,8 @@ const Settings = ({profile, setProfile}) => {
       reader.onload = () => {
         const base64Image = reader.result;
         // base64 데이터를 state에 저장
-        setProfile(prevProfile => ({
-          ...prevProfile,
+        setProfileImage(prevProfileImage => ({
+          ...prevProfileImage,
           profileImage: base64Image,
         }));
       };
@@ -171,23 +170,22 @@ const Settings = ({profile, setProfile}) => {
   const onClickWithdraw = async () => {
     try {
       const response = await jwtAxios.delete(API_USERS);
-
-      const data = JSON.parse(response?.data || '{}');
-
-      // response.data가 없는 경우 에러 처리
-      if (data.constructor === Object && Object.keys(data).length === 0) {
-        throw new Error('서버가 불안정합니다. 문제가 계속될 시 문의바랍니다.');
+      if (!response) {
+        throw new Error('계정 삭제 실패');
       }
 
-      if (!data['errorCode']) {
-        return navigate(LOGOUT);
-      }
+      return navigate(LOGOUT);
     } catch (err) {
-      showAlert(
-        'danger',
-        '연결이 불안정합니다. 잠시 후 다시 시도해주세요.',
-        2000,
-      );
+      const errorCode = err?.response?.data?.errorCode;
+
+      switch (errorCode) {
+        default: // 기타 에러에 대한 처리
+          showAlert(
+            'danger',
+            '연결이 불안정합니다. 잠시 후 다시 시도해주세요.',
+            2000,
+          );
+      }
     }
   };
 
@@ -236,7 +234,7 @@ const Settings = ({profile, setProfile}) => {
                   <Form.Label className="d-block">프로필 사진</Form.Label>
                   <Form.Group className="position-relative">
                     <Image
-                      src={profile.profileImage}
+                      src={profileImage}
                       width="192"
                       height="auto"
                       roundedCircle
