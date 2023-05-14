@@ -18,6 +18,8 @@ import {
   wakeupTime,
 } from 'constants/lifestyleList';
 import Button from 'components/common/Button/Button';
+import {useNavigate} from 'react-router-dom';
+import {USERS_LIFESTYLE} from 'constants/path';
 
 const Lifestyle = ({
   nickname,
@@ -26,8 +28,11 @@ const Lifestyle = ({
   lifestyle,
   profileImage,
 }) => {
+  const navigate = useNavigate();
+
   const onClickModifyBtn = () => {
     // "나는 이런 사람이에요!"의 수정 페이지로 이동
+    navigate(USERS_LIFESTYLE);
   };
 
   return (

@@ -3,6 +3,7 @@ import Loading from 'components/common/Loading/Loading';
 import Section from 'components/common/Section';
 import CODE from 'constants/errorCode';
 import {LOGIN} from 'constants/path';
+import useLifestyle from 'hooks/useLifestyle';
 import useMember from 'hooks/useMember';
 import {useState} from 'react';
 import {useEffect} from 'react';
@@ -16,15 +17,17 @@ const LifestyleFormPage = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(true);
 
   const {member, getMember} = useMember();
+  const {lifestyle, getLifestyle} = useLifestyle();
 
   useEffect(() => {
     const getDatas = async () => {
-      const memberCode = await getMember();
+      const response = await getMember();
 
-      if (memberCode === CODE.NOT_FOUND_MEMBER) {
+      if (response === CODE.NOT_FOUND_MEMBER) {
         setIsLoggedIn(false);
+      } else {
+        await getLifestyle(response?.nickname);
       }
-
       setLoading(false);
     };
     getDatas();
@@ -42,7 +45,7 @@ const LifestyleFormPage = () => {
 
   return (
     <Section title={title} description={description}>
-      <LifestyleForm></LifestyleForm>
+      <LifestyleForm member={member} lifestyle={lifestyle}></LifestyleForm>
     </Section>
   );
 };

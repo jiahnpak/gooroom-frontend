@@ -17,13 +17,10 @@ import useInterceptedAxios from 'hooks/useInterceptedAxios';
 import {API_USERS_LIFESTYLE} from 'constants/apiUrls';
 import {useAlert} from 'hooks/useAlert';
 import {useNavigate} from 'react-router-dom';
-import {initialLifestyle, useLifestyle} from 'contexts/LifestyleContext';
-import {useMember} from 'contexts/MemberContext';
+import {USERS_LIFESTYLE} from 'constants/path';
+import {initialLifestyle} from 'hooks/useLifestyle';
 
-const LifestyleForm = () => {
-  const member = useMember();
-  const lifestyle = useLifestyle(member.nickname);
-
+const LifestyleForm = ({member, lifestyle}) => {
   const {
     register,
     handleSubmit,
@@ -63,7 +60,7 @@ const LifestyleForm = () => {
         throw new Error('서버와 연결이 불안정합니다.');
       }
 
-      return navigate('/');
+      return navigate(`${USERS_LIFESTYLE}/${member.nickname}`);
     } catch (err) {
       const errorCode = err?.response?.data?.errorCode;
 

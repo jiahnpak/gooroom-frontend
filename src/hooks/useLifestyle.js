@@ -3,16 +3,18 @@ import {useState} from 'react';
 import useInterceptedAxios from './useInterceptedAxios';
 import CODE from 'constants/errorCode';
 
+export const initialLifestyle = {
+  smokingType: false,
+  drinkingType: '',
+  sleepingHabitType: false,
+  wakeupTime: '',
+  organizeType: '',
+  cleanupType: '',
+  introduce: '',
+};
+
 const useLifestyle = () => {
-  const [lifestyle, setLifestyle] = useState({
-    smokingType: false,
-    drinkingType: '',
-    sleepingHabitType: false,
-    wakeupTime: '',
-    organizeType: '',
-    cleanupType: '',
-    introduce: '',
-  });
+  const [lifestyle, setLifestyle] = useState(initialLifestyle);
   const jwtAxios = useInterceptedAxios();
 
   const getLifestyle = async nickname => {

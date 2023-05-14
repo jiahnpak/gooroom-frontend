@@ -17,11 +17,7 @@ import Logout from 'components/Logout/Logout';
 import {AlertProvider} from 'contexts/AlertContext';
 import ProfilePage from 'pages/ProfilePage';
 import LifestylePage from 'pages/LifestylePage';
-import {MemberProvider} from 'contexts/MemberContext';
-import {ProfileImageProvider} from 'contexts/ProfileImageContext';
-import Provider from 'components/common/Provider/Provider';
 import LoginNaver from 'components/Login/LoginNaver';
-import {LifestyleProvider} from 'contexts/LifestyleContext';
 import {RecoilRoot} from 'recoil';
 import NotFoundPage from 'pages/NotFoundPage';
 
@@ -54,21 +50,9 @@ const App = () => {
                     <Route path={PATH.SIGNUP} element={<SignupPage />} />
                     <Route path={PATH.USERS} element={<ProfilePage />} />
                     <Route
-                      element={
-                        <Provider
-                          providers={[
-                            MemberProvider,
-                            ProfileImageProvider,
-                            LifestyleProvider,
-                          ]}
-                        />
-                      }
-                    >
-                      <Route
-                        path={PATH.USERS_LIFESTYLE}
-                        element={<LifestyleFormPage />}
-                      />
-                    </Route>
+                      path={PATH.USERS_LIFESTYLE}
+                      element={<LifestyleFormPage />}
+                    />
                     <Route
                       path={`${PATH.USERS_LIFESTYLE}/:nickname`}
                       element={<LifestylePage />}

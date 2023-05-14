@@ -35,6 +35,8 @@ const useMember = () => {
         birthyear,
         birthday,
       }));
+
+      return {name, nickname, email, mobile, gender, birthyear, birthday};
     } catch (err) {
       if (err?.response?.status === 404) {
         return CODE.NOT_FOUND_MEMBER;
