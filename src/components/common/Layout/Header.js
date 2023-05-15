@@ -36,7 +36,6 @@ const Header = () => {
               <Nav.Link href="/">커뮤니티</Nav.Link>
               {auth.authenticated ? (
                 <>
-                  <Nav.Link href="/">채팅</Nav.Link>
                   <Button variant="secondary" href={LOGOUT} className="mx-2">
                     로그아웃
                   </Button>

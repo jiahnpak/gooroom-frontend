@@ -21,18 +21,12 @@ import Button from 'components/common/Button/Button';
 import {useNavigate} from 'react-router-dom';
 import {USERS_LIFESTYLE} from 'constants/path';
 
-const Lifestyle = ({
-  nickname,
-  member,
-  loginMember,
-  lifestyle,
-  profileImage,
-}) => {
+const Lifestyle = ({nickname, loginMember, lifestyle, profileImage}) => {
   const navigate = useNavigate();
 
   const onClickModifyBtn = () => {
     // "나는 이런 사람이에요!"의 수정 페이지로 이동
-    navigate(USERS_LIFESTYLE);
+    navigate(USERS_LIFESTYLE, {state: {modify: true}});
   };
 
   return (
@@ -43,17 +37,17 @@ const Lifestyle = ({
             <Image roundedCircle width="72" height="auto" src={profileImage} />
           </Col>
           <Col>
-            <StyledProfileName>{member.name}</StyledProfileName>
+            <StyledProfileName>{lifestyle.name}</StyledProfileName>
             <StyledProfileMeta>
-              {member.gender &&
+              {lifestyle.gender &&
                 `성별: ${
-                  member.gender === 'M'
+                  lifestyle.gender === 'M'
                     ? '남자 '
-                    : member.gender === 'F'
+                    : lifestyle.gender === 'F'
                     ? '여자 '
                     : ''
                 }`}{' '}
-              {member.birthyear && `연령대: ${member.birthyear}`}
+              {lifestyle.age && `연령대: ${lifestyle.age}`}
             </StyledProfileMeta>
           </Col>
           {nickname === loginMember.nickname && (

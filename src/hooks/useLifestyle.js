@@ -3,7 +3,10 @@ import {useState} from 'react';
 import useInterceptedAxios from './useInterceptedAxios';
 import CODE from 'constants/errorCode';
 
-export const initialLifestyle = {
+const initialLifestyle = {
+  name: '',
+  gender: '',
+  age: 0,
   smokingType: false,
   drinkingType: '',
   sleepingHabitType: false,
@@ -26,6 +29,9 @@ const useLifestyle = () => {
       }
 
       const {
+        name,
+        gender,
+        age,
         smokingType,
         drinkingType,
         sleepingHabitType,
@@ -36,6 +42,9 @@ const useLifestyle = () => {
       } = data;
 
       setLifestyle({
+        name,
+        gender,
+        age,
         smokingType,
         drinkingType,
         sleepingHabitType,

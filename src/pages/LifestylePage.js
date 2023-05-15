@@ -21,7 +21,6 @@ const LifestylePage = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(true);
   const [hasLifestyle, setHasLifestyle] = useState(true);
 
-  const {member, getMember} = useMember(); // 닉네임으로 Member 찾기 필요
   const {member: loginMember, getMember: getLoginMember} = useMember(); // 현재 로그인 중인 사용자의 정보
   const {lifestyle, getLifestyle} = useLifestyle(); // 지정된 닉네임을 가진 사용자의 기본 정보 및 성향 정보
   const {profileImage, getProfileImage} = useProfileImage(); // 지정된 닉네임을 가진 사용자의 프로필 이미지
@@ -29,8 +28,6 @@ const LifestylePage = () => {
   // 컴포넌트가 마운트될 때 지정된 닉네임을 가진 사용자 생활 패턴을 서버에게 받아온다.
   useEffect(() => {
     const getDatas = async () => {
-      await getMember();
-
       const loginMemberCode = await getLoginMember();
       switch (loginMemberCode) {
         case CODE.INVALIDATE_TOKEN:
@@ -96,7 +93,6 @@ const LifestylePage = () => {
       <Section title={title}>
         <Lifestyle
           nickname={nickname}
-          member={member}
           loginMember={loginMember}
           lifestyle={lifestyle}
           profileImage={profileImage}

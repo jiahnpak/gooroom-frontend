@@ -16,9 +16,8 @@ import {validationSchema} from './validationSchema';
 import useInterceptedAxios from 'hooks/useInterceptedAxios';
 import {API_USERS_LIFESTYLE} from 'constants/apiUrls';
 import {useAlert} from 'hooks/useAlert';
-import {useNavigate} from 'react-router-dom';
+import {useNavigate, useSearchParams} from 'react-router-dom';
 import {USERS_LIFESTYLE} from 'constants/path';
-import {initialLifestyle} from 'hooks/useLifestyle';
 
 const LifestyleForm = ({member, lifestyle}) => {
   const {
@@ -44,11 +43,16 @@ const LifestyleForm = ({member, lifestyle}) => {
   // 알림 창 표시를 위한 훅
   const showAlert = useAlert();
 
+  // 쿼리스트링 추출을 위해 사용
+  const [searchParams] = useSearchParams();
+
   const jwtAxios = useInterceptedAxios();
 
   const onSubmit = async data => {
     const body = JSON.stringify(data);
-    const method = lifestyle === initialLifestyle ? 'post' : 'patch';
+    const isModify = searchParams.get('modify');
+
+    const method = isModify ? 'patch' : 'post';
 
     try {
       const response = await jwtAxios({
