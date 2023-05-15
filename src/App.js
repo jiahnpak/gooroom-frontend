@@ -20,6 +20,7 @@ import LifestylePage from 'pages/LifestylePage';
 import LoginNaver from 'components/Login/LoginNaver';
 import {RecoilRoot} from 'recoil';
 import NotFoundPage from 'pages/NotFoundPage';
+import MateList from 'components/MateList/MateList';
 
 const App = () => {
   return (
@@ -39,6 +40,10 @@ const App = () => {
                       element={<LoginEmailPage />}
                     />
                     <Route path={PATH.LOGOUT} element={<Logout />} />
+                    <Route
+                      path={PATH.MATELIST}
+                      element={<MateList></MateList>}
+                    />
                     <Route
                       path={PATH.REDIRECT_URI_KAKAO}
                       element={<LoginKakao />}
