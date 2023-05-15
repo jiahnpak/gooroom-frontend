@@ -31,7 +31,7 @@ const Header = () => {
           <Navbar.Toggle aria-controls="global-navbar" />
           <Navbar.Collapse id="global-navbar">
             <Nav className="ms-auto">
-              <Nav.Link href="/">룸메 구하기</Nav.Link>
+              <Nav.Link href="/mates">룸메 구하기</Nav.Link>
               <Nav.Link href="/">방 구하기</Nav.Link>
               <Nav.Link href="/">커뮤니티</Nav.Link>
               {auth.authenticated ? (
