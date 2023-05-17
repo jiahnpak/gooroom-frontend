@@ -12,4 +12,4 @@ export const LOGOUT = '/logout';
 export const USERS = '/users';
 export const LIFESTYLE = 'lifestyle';
 export const USERS_LIFESTYLE = `${USERS}/${LIFESTYLE}`;
-export const MATELIST = '/mates';
+export const MATES = '/mates';
