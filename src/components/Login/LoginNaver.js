@@ -4,7 +4,6 @@ import Loading from 'components/common/Loading';
 import {useEffect} from 'react';
 import {REDIRECT_URI_NAVER} from 'constants/path';
 import customAxios from 'utils/customAxios';
-import {setRefreshToken} from 'utils/RefreshToken';
 import useAlert from 'hooks/useAlert';
 import {useSetRecoilState} from 'recoil';
 import {AuthState} from 'stores/AuthState';
@@ -14,7 +13,7 @@ const LoginNaver = props => {
   const setAuth = useSetRecoilState(AuthState);
   const showAlert = useAlert();
 
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams] = useSearchParams();
   const code = searchParams.get('code');
   const state = searchParams.get('state');
   const error = searchParams.get('error');
@@ -30,13 +29,11 @@ const LoginNaver = props => {
         });
 
         const accessToken = response?.headers['authorization'];
-        const refreshToken = response?.headers['authorization-refresh'];
 
-        if (!(accessToken && refreshToken)) {
+        if (!accessToken) {
           throw new Error('토큰 생성에 실패했습니다.');
         }
 
-        setRefreshToken(refreshToken);
         setAuth({authenticate: true, accessToken: accessToken});
       } catch (err) {
         showAlert(

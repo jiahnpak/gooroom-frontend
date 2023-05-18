@@ -4,7 +4,6 @@ import Loading from 'components/common/Loading';
 import {useEffect} from 'react';
 import {REDIRECT_URI_KAKAO} from 'constants/path';
 import customAxios from 'utils/customAxios';
-import {setRefreshToken} from 'utils/RefreshToken';
 import useAlert from 'hooks/useAlert';
 import {useSetRecoilState} from 'recoil';
 import {AuthState} from 'stores/AuthState';
@@ -23,13 +22,11 @@ const LoginKakao = props => {
         const response = await customAxios.post(REDIRECT_URI_KAKAO, code);
 
         const accessToken = response?.headers['authorization'];
-        const refreshToken = response?.headers['authorization-refresh'];
 
-        if (!(accessToken && refreshToken)) {
+        if (!accessToken) {
           throw new Error('토큰 생성에 실패했습니다.');
         }
 
-        setRefreshToken(refreshToken);
         setAuth({authenticated: true, accessToken: accessToken});
       } catch (err) {
         showAlert(

@@ -8,7 +8,6 @@ import {useNavigate} from 'react-router-dom';
 import {yupResolver} from '@hookform/resolvers/yup';
 import {validationSchema} from './validationSchema';
 import {useAlert} from 'hooks/useAlert';
-import {setRefreshToken} from 'utils/RefreshToken';
 import {SIGNUP} from 'constants/path';
 import CODE from 'constants/errorCode';
 import {useSetRecoilState} from 'recoil';
@@ -40,18 +39,12 @@ const LoginEmail = ({title}) => {
     try {
       const response = await postLogin(body);
 
-      if (!response) {
-        throw new Error('서버와 연결이 불안정합니다.');
-      }
-
       const accessToken = response?.headers['authorization'];
-      const refreshToken = response?.headers['authorization-refresh'];
 
-      if (!(accessToken && refreshToken)) {
+      if (!accessToken) {
         throw new Error('토큰 생성에 실패했습니다.');
       }
 
-      setRefreshToken(refreshToken);
       setAuth({authenticated: true, accessToken: accessToken});
 
       return navigate('/');

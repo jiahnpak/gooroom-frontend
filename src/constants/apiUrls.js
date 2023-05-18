@@ -7,6 +7,8 @@ export const API_LOGIN_KAKAO = `https://kauth.kakao.com/oauth/authorize?response
 
 export const API_LOGIN_NAVER = `https://nid.naver.com/oauth2.0/authorize?response_type=code&client_id=${process.env.REACT_APP_CLIENT_ID_NAVER}&redirect_uri=${REDIRECT_URI_NAVER}}`;
 
+export const API_LOGIN_REFRESH = `${process.env.REACT_APP_API_URL}/login/refresh`;
+
 export const API_SIGNUP_EMAIL = `${process.env.REACT_APP_API_URL}/signup/email`;
 
 export const API_USERS = `${process.env.REACT_APP_API_URL}/users`;
