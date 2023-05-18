@@ -10,9 +10,14 @@ import {useEffect, useState} from 'react';
 import UnexpectedPage from './UnexpectedPage';
 import Loading from 'components/common/Loading/Loading';
 import Pagination from 'components/common/Pagination/Pagination';
+import {Stack} from 'react-bootstrap';
+import {useNavigate} from 'react-router-dom';
+import {MATES} from 'constants/path';
 
 const MateListPage = () => {
   const title = '룸메 구하기';
+
+  const navigate = useNavigate();
 
   const [activeButton, setActiveButton] = useState('button1');
   const [unexpectedError, setUnexpectedError] = useState(false);
@@ -34,7 +39,7 @@ const MateListPage = () => {
 
   useEffect(() => {
     const getDatas = async () => {
-      const response = await getMateList();
+      const response = await getMateList(filter);
       switch (response) {
         case CODE.UNEXPECTED:
           setUnexpectedError(true);
@@ -88,6 +93,12 @@ const MateListPage = () => {
 
         {/* 현재 페이지의 룸메이트 게시글 목록 */}
         <MateList mateList={mateList} />
+
+        <Stack direction="horizontal" className="d-flex justify-content-end">
+          <Button variant="primary" onClick={() => navigate(`${MATES}/new`)}>
+            글쓰기
+          </Button>
+        </Stack>
 
         {/* 페이지 네비게이터 */}
         <Pagination

@@ -12,7 +12,7 @@ const useMateList = () => {
   const [mateList, setMateList] = useState(initialMateList);
   const jwtAxios = useInterceptedAxios();
 
-  const getMateList = async (...filters) => {
+  const getMateList = async filters => {
     try {
       const response = await jwtAxios.get(`${API_MATES}`, {
         params: {
