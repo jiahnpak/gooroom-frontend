@@ -20,6 +20,7 @@ import {
 import Button from 'components/common/Button/Button';
 import {useNavigate} from 'react-router-dom';
 import {USERS_LIFESTYLE} from 'constants/path';
+import {formatAgeGroup} from 'utils/formatVariables';
 
 const Lifestyle = ({nickname, loginMember, lifestyle, profileImage}) => {
   const navigate = useNavigate();
@@ -39,15 +40,19 @@ const Lifestyle = ({nickname, loginMember, lifestyle, profileImage}) => {
           <Col>
             <StyledProfileName>{lifestyle.name}</StyledProfileName>
             <StyledProfileMeta>
-              {lifestyle.gender &&
-                `성별: ${
-                  lifestyle.gender === 'M'
-                    ? '남자 '
-                    : lifestyle.gender === 'F'
-                    ? '여자 '
-                    : ''
-                }`}{' '}
-              {lifestyle.age && `연령대: ${lifestyle.age}`}
+              <span>
+                {lifestyle.gender &&
+                  `성별: ${
+                    lifestyle.gender === 'M'
+                      ? '남자 '
+                      : lifestyle.gender === 'F'
+                      ? '여자 '
+                      : ''
+                  }`}
+              </span>
+              <span>
+                {lifestyle.age && `연령대: ${formatAgeGroup(lifestyle.age)}`}
+              </span>
             </StyledProfileMeta>
           </Col>
           {nickname === loginMember.nickname && (
