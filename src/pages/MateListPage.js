@@ -9,8 +9,6 @@ import useMateList from 'hooks/useMateList';
 import {useEffect, useState} from 'react';
 import UnexpectedPage from './UnexpectedPage';
 import Loading from 'components/common/Loading/Loading';
-import {Navigate} from 'react-router-dom';
-import {LOGIN} from 'constants/path';
 import Pagination from 'components/common/Pagination/Pagination';
 
 const MateListPage = () => {
@@ -19,7 +17,6 @@ const MateListPage = () => {
   const [activeButton, setActiveButton] = useState('button1');
   const [unexpectedError, setUnexpectedError] = useState(false);
   const [loading, setLoading] = useState(true);
-  const [isLoggedIn, setIsLoggedIn] = useState(true);
 
   const [filter, dispatchFilter] = useFilter();
   const {mateList, getMateList} = useMateList();
@@ -39,9 +36,6 @@ const MateListPage = () => {
     const getDatas = async () => {
       const response = await getMateList();
       switch (response) {
-        case CODE.INVALIDATE_TOKEN:
-          setIsLoggedIn(false);
-          break;
         case CODE.UNEXPECTED:
           setUnexpectedError(true);
           break;
@@ -60,11 +54,6 @@ const MateListPage = () => {
   // 서버에서 데이터를 가져오는 중에는 로딩화면 렌더링
   if (loading) {
     return <Loading />;
-  }
-
-  // 로그인 하지 않은 사용자인 경우 로그인 페이지로 리다이렉트
-  if (!isLoggedIn) {
-    return <Navigate to={LOGIN} replace={true} />;
   }
 
   return (

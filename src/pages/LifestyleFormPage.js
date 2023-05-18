@@ -16,7 +16,6 @@ const LifestyleFormPage = () => {
 
   const [unexpectedError, setUnexpectedError] = useState(false);
   const [loading, setLoading] = useState(true);
-  const [isLoggedIn, setIsLoggedIn] = useState(true);
 
   const {member, getMember} = useMember();
   const {lifestyle, getLifestyle} = useLifestyle();
@@ -26,9 +25,6 @@ const LifestyleFormPage = () => {
       const response = await getMember();
 
       switch (response) {
-        case CODE.INVALIDATE_TOKEN:
-          setIsLoggedIn(false);
-          break;
         case CODE.UNEXPECTED:
           setUnexpectedError(true);
           break;
@@ -48,11 +44,6 @@ const LifestyleFormPage = () => {
   // 서버에서 데이터를 가져오는 중에는 로딩화면 렌더링
   if (loading) {
     return <Loading />;
-  }
-
-  // 로그인 하지 않은 사용자인 경우 로그인 페이지로 리다이렉트
-  if (!isLoggedIn) {
-    return <Navigate to={LOGIN} replace={true} />;
   }
 
   return (

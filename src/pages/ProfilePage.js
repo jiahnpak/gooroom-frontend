@@ -11,7 +11,6 @@ import UnexpectedPage from './UnexpectedPage';
 const ProfilePage = () => {
   const [unexpectedError, setUnexpectedError] = useState(false);
   const [loading, setLoading] = useState(true);
-  const [isLoggedIn, setIsLoggedIn] = useState(true);
 
   const memberMethods = useMember();
   const {getMember} = memberMethods;
@@ -21,9 +20,6 @@ const ProfilePage = () => {
       const response = await getMember();
 
       switch (response) {
-        case CODE.INVALIDATE_TOKEN:
-          setIsLoggedIn(false);
-          break;
         case CODE.UNEXPECTED:
           setUnexpectedError(true);
           break;
@@ -42,11 +38,6 @@ const ProfilePage = () => {
   // 서버에서 데이터를 가져오는 중에는 로딩화면 렌더링
   if (loading) {
     return <Loading />;
-  }
-
-  // 로그인 하지 않은 사용자인 경우 로그인 페이지로 리다이렉트
-  if (!isLoggedIn) {
-    return <Navigate to={LOGIN} replace={true} />;
   }
 
   return <Profile memberMethods={memberMethods}></Profile>;
