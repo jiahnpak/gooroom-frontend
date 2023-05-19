@@ -1,5 +1,5 @@
 import Button from 'components/common/Button/Button';
-import {nameMax, nameMin, pwdMax} from 'constants/validation';
+import {nameMax, nameMin, pwdMax} from 'constants/memberConstants';
 import {Col, Form, Image, Modal, Row} from 'react-bootstrap';
 import {FaRegEdit} from 'react-icons/fa';
 import {useRef} from 'react';

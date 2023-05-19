@@ -1,3 +1,8 @@
+export const priceMax = 999999999;
+export const dongMax = 20;
+
+export const priceStep = 5000;
+
 export const postStatusFormat = {
   PROGRESS: '진행 중',
   DISCUSSION: '협의 중',

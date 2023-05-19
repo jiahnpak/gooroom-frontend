@@ -5,53 +5,14 @@ import {StyledFilterPositioner} from './styles';
 import Button from 'components/common/Button';
 import {Controller, useForm} from 'react-hook-form';
 import {yupResolver} from '@hookform/resolvers/yup';
-import {dongMax, priceMax, validationSchema} from './validationSchema';
+import {validationSchema} from './validationSchema';
 import {Slider} from '@mui/material';
-import {formatPrice} from 'utils/formatVariables';
+import {formatPrice, priceControl} from 'utils/mateUtils';
+import {dongMax, priceMax} from 'constants/mateConstants';
 
 const Filter = ({dispatchFilter}) => {
   // 필터링 메뉴 모달의 상태
   const [show, setShow] = useState(true);
-
-  // 가격대 슬라이더의 속성을 정의하는 객체
-  const priceControl = {
-    WOLSE: {
-      // 월세인 경우
-      max: 30,
-      otherMax: 35,
-      scale: price => {
-        if (price <= 14) {
-          return 10000 * (5 * price);
-        } else if (price <= 22) {
-          return 10000 * (10 * (price - 14) + 70);
-        } else if (price <= 29) {
-          return 10000 * (50 * (price - 22) + 150);
-        } else {
-          return priceMax;
-        }
-      },
-    },
-    JEONSE: {
-      // 전세인 경우
-      max: 35,
-      otherMax: 30,
-      scale: price => {
-        if (price <= 2) {
-          return 10000 * (50 * price);
-        } else if (price <= 6) {
-          return 10000 * (100 * (price - 2) + 100);
-        } else if (price <= 25) {
-          return 10000 * (500 * (price - 6) + 500);
-        } else if (price <= 27) {
-          return 10000 * (5000 * (price - 25) + 10000);
-        } else if (price <= 34) {
-          return 10000 * (10000 * (price - 27) + 20000);
-        } else {
-          return priceMax;
-        }
-      },
-    },
-  };
 
   // 연령대 슬라이더의 속성을 정의하는 객체
   const ageControl = {

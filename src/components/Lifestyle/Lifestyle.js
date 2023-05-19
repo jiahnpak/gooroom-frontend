@@ -20,7 +20,7 @@ import {
 import Button from 'components/common/Button/Button';
 import {useNavigate} from 'react-router-dom';
 import {USERS_LIFESTYLE} from 'constants/path';
-import {formatAgeGroup} from 'utils/formatVariables';
+import {formatAgeGroup} from 'utils/mateUtils';
 
 const Lifestyle = ({nickname, loginMember, lifestyle, profileImage}) => {
   const navigate = useNavigate();

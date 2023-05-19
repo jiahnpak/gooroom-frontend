@@ -11,8 +11,8 @@ import {
   postStatusFormat,
   rentTypeFormat,
   residenceTypeFormat,
-} from 'constants/mateEnum';
-import {formatAgeGroup, formatPrice} from 'utils/formatVariables';
+} from 'constants/mateConstants';
+import {formatAgeGroup, formatPrice} from 'utils/mateUtils';
 
 const MateList = ({mateList}) => {
   return (

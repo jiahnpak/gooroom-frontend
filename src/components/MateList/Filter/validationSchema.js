@@ -1,7 +1,5 @@
+import {dongMax} from 'constants/mateConstants';
 import * as yup from 'yup';
-
-export const priceMax = 999999999;
-export const dongMax = 20;
 
 export const validationSchema = yup.object().shape({
   rentType: yup // 월세/전세 유효성 정의

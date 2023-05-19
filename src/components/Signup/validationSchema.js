@@ -8,7 +8,7 @@ import {
   nameMin,
   pwdMax,
   pwdMin,
-} from 'constants/validation';
+} from 'constants/memberConstants';
 
 const REGEXP_EMAIL =
   '^[\\w!#$%&’*+\\/=?`{|}~^-]+(?:\\.[\\w!#$%&’*+\\/=?`{|}~^-]+)*@(?:[a-zA-Z\\d-]+\\.)+[a-zA-Z]{2,6}$';
