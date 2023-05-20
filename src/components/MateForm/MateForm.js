@@ -88,8 +88,10 @@ const MateForm = ({hasHome}) => {
       content,
     });
 
+    const homePostBlob = new Blob([homePost], {type: 'application/json'});
+
     const formData = new FormData();
-    formData.append('homePost', homePost);
+    formData.append('homePost', homePostBlob);
     formData.append('file', roomImage);
 
     try {
