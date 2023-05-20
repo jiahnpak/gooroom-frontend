@@ -15,6 +15,13 @@ const useInterceptedAxios = () => {
         if (!config.headers['Authorization']) {
           config.headers['Authorization'] = `Bearer ${auth.accessToken}`;
         }
+        // 요청에서 보내는 데이터가 FormData라면 content type을 바꾼다.
+        if (config.data instanceof FormData) {
+          console.log('Form data!!');
+          config.headers['Content-Type'] = 'multipart/form-data';
+        } else {
+          config.headers['Content-Type'] = 'application/json';
+        }
         return config;
       },
       error => Promise.reject(error),

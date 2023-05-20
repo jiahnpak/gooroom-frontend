@@ -39,7 +39,7 @@ const MateFormPage = () => {
           같이 집 구해요
         </Button>
       </ButtonWrapper>
-      <MateForm />
+      <MateForm hasHome={activeButton === 'button1'} />
     </Section>
   );
 };
