@@ -5,6 +5,11 @@ export const priceStep = 5000;
 export const titleMax = 25;
 export const contentMax = 500;
 
+export const hasHomeFormat = {
+  true: '거주 중인 집이 있어요',
+  false: '같이 집 구해요',
+};
+
 export const postStatusFormat = {
   PROGRESS: '진행 중',
   DISCUSSION: '협의 중',

@@ -23,6 +23,8 @@ export const MateListItem = styled(ListGroup.Item)`
   justify-content: space-between;
   align-items: center;
   color: ${({theme}) => theme.colors.lightgray};
+
+  cursor: pointer;
 `;
 
 export const ListItemLeft = styled(Stack)`

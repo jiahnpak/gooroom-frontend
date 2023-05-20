@@ -13,13 +13,19 @@ import {
   residenceTypeFormat,
 } from 'constants/mateConstants';
 import {formatAgeGroup, formatPrice} from 'utils/mateUtils';
+import {useNavigate} from 'react-router-dom';
+import {MATES} from 'constants/path';
 
 const MateList = ({mateList}) => {
+  const navigate = useNavigate();
   return (
     <>
       <ListGroup variant="flush">
-        {mateList.mateList.map((mates, index) => (
-          <MateListItem key={index}>
+        {mateList.map((mates, index) => (
+          <MateListItem
+            key={index}
+            onClick={() => navigate(`${MATES}/${mates?.postId}`)}
+          >
             <ListItemLeft>
               <ListItemTitle>{mates?.title}</ListItemTitle>
               <ListItemMeta direction="horizontal" gap={1}>

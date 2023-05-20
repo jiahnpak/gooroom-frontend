@@ -92,7 +92,7 @@ const MateListPage = () => {
         <Filter dispatchFilter={dispatchFilter} />
 
         {/* 현재 페이지의 룸메이트 게시글 목록 */}
-        <MateList mateList={mateList} />
+        <MateList mateList={mateList.mateList} />
 
         <Stack direction="horizontal" className="d-flex justify-content-end">
           <Button variant="primary" onClick={() => navigate(`${MATES}/new`)}>

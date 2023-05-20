@@ -1,3 +1,5 @@
+import {differenceInSeconds} from 'date-fns';
+
 const {priceMax} = require('constants/mateConstants');
 
 // 가격대 슬라이더의 속성을 정의하는 객체
@@ -63,4 +65,20 @@ export const formatAgeGroup = age => {
   } else {
     return `${tens}대 후반`;
   }
+};
+
+export const formatDifferenceInTimes = (laterDate, earlierDate) => {
+  let difference = differenceInSeconds(laterDate, earlierDate);
+  const times = [60, 60, 24, 365];
+  const units = ['초', '분', '시간', '일', '년'];
+
+  let i;
+  for (i = 0; i < times.length; i++) {
+    const nextDifference = Math.floor(difference / times[i]);
+    if (nextDifference === 0) {
+      break;
+    }
+    difference = nextDifference;
+  }
+  return `${difference}${units[i]} 전`;
 };

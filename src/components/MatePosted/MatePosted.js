@@ -3,8 +3,20 @@ import Form from 'react-bootstrap/Form';
 import Row from 'react-bootstrap/Row';
 import styled from 'styled-components';
 import {Image, Stack} from 'react-bootstrap';
-import Header from 'components/common/Layout/Header';
 import Button from 'components/common/Button/Button';
+import {
+  hasHomeFormat,
+  rentTypeFormat,
+  residenceTypeFormat,
+} from 'constants/mateConstants';
+import {
+  formatAgeGroup,
+  formatDifferenceInTimes,
+  formatPrice,
+} from 'utils/mateUtils';
+import {postStatusFormat} from 'constants/mateConstants';
+import {FaHeart, FaRegHeart} from 'react-icons/fa';
+import {parseISO} from 'date-fns';
 
 const DefaultDiv = styled.div`
   display: flex;
@@ -34,7 +46,7 @@ const PostedMetadata = styled(Stack)`
   color: #a2a2a2;
 `;
 
-const MatePosted = ({matePosted}) => {
+const MatePosted = ({mateInfo, profileImage, roomImage}) => {
   return (
     <>
       <Form style={{width: '70%'}}>
@@ -43,7 +55,7 @@ const MatePosted = ({matePosted}) => {
             <Col xs="auto">
               <Image
                 roundedCircle
-                src={matePosted.profileImage}
+                src={profileImage}
                 fluid
                 thumbnail
                 width="64"
@@ -52,10 +64,10 @@ const MatePosted = ({matePosted}) => {
             </Col>
             <Col>
               <DefaultDiv>
-                <span>{matePosted.nickname}</span>
+                <span>{mateInfo.nickname}</span>
               </DefaultDiv>
               <DefaultDiv>
-                <span>{matePosted.age}</span>
+                <span>{formatAgeGroup(mateInfo.age)}</span>
               </DefaultDiv>
             </Col>
             <Button variant="secondary" style={{marginRight: '10px'}}>
@@ -74,42 +86,64 @@ const MatePosted = ({matePosted}) => {
             }}
           >
             <h3 style={{fontSize: '1.25rem', color: '#000000'}}>
-              {matePosted.title}
+              {mateInfo.title}
             </h3>
-            {matePosted.postStatus === '진행 중' ||
-            matePosted.postStatus === '협의 중' ? (
-              <Button variant="primary">{matePosted.postStatus}</Button>
-            ) : (
-              <Button variant="secondary">{matePosted.postStatus}</Button>
-            )}
+            <Button
+              variant={
+                mateInfo?.postStatus !== 'COMPLETE' ? 'primary' : 'secondary'
+              }
+            >
+              {postStatusFormat[mateInfo?.postStatus]}
+            </Button>
           </div>
-          <span>{matePosted.hasHome ? '집 O' : '집 X'}</span>
+          <Stack direction="horizontal" gap={2}>
+            <span>{hasHomeFormat[mateInfo.hasHome]}</span>
+            <span>
+              {formatDifferenceInTimes(
+                new Date(),
+                parseISO(mateInfo.lastEditTime),
+              )}
+            </span>
+          </Stack>
 
           <Stack direction="horizontal" gap={2}>
             <PostedDescriptionSpan>
-              {matePosted.residenceType}
+              {residenceTypeFormat[mateInfo?.residenceType]}
             </PostedDescriptionSpan>
             <PostedDescriptionSpan>|</PostedDescriptionSpan>
-            <PostedDescriptionSpan>{matePosted.rentType}</PostedDescriptionSpan>
             <PostedDescriptionSpan>
-              {matePosted.roomPrice}
+              {rentTypeFormat[mateInfo?.rentType]}
+            </PostedDescriptionSpan>
+            <PostedDescriptionSpan>
+              {formatPrice(mateInfo.roomPrice)}
             </PostedDescriptionSpan>
           </Stack>
-          <DefaultDiv>
-            <span>{matePosted.address}</span>
-          </DefaultDiv>
+          <Stack direction="horizontal" gap={1}>
+            <span>{mateInfo?.city}</span>
+            <span>{mateInfo?.roadName}</span>
+            <span>{mateInfo?.buildingNumber}</span>
+            <span>{mateInfo?.zipcode}</span>
+          </Stack>
         </PostedMetadata>
 
         <DefaultDiv style={{marginTop: '10px'}}>
-          <p>{matePosted.content}</p>
+          <p>{mateInfo.content}</p>
         </DefaultDiv>
-        <DefaultDiv style={{width: '100%'}}>
-          <Image src={matePosted.roomImage} fluid></Image>
-        </DefaultDiv>
+        {roomImage && (
+          <DefaultDiv style={{width: '100%'}}>
+            <Image src={roomImage} fluid></Image>
+          </DefaultDiv>
+        )}
         <Row>
           <StyledMatePostedController>
             <DefaultDiv style={{marginRight: '10px'}}>
-              <Button variant="secondary">찜하기</Button>
+              <Button
+                variant={mateInfo.postMark ? 'primary' : 'secondary'}
+                className="d-flex align-items-center gap-1"
+              >
+                {mateInfo.postMark ? <FaHeart /> : <FaRegHeart />}
+                <span>찜하기</span>
+              </Button>
             </DefaultDiv>
             <DefaultDiv style={{marginRight: '10px'}}>
               <Button variant="secondary">수정</Button>
