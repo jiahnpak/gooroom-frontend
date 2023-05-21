@@ -12,7 +12,9 @@ import Loading from 'components/common/Loading/Loading';
 import Pagination from 'components/common/Pagination/Pagination';
 import {Stack} from 'react-bootstrap';
 import {useNavigate} from 'react-router-dom';
-import {MATES} from 'constants/path';
+import {MATES, USERS_LIFESTYLE} from 'constants/path';
+import useLifestyle from 'hooks/useLifestyle';
+import useMember from 'hooks/useMember';
 
 const MateListPage = () => {
   const title = '룸메 구하기';
@@ -25,6 +27,8 @@ const MateListPage = () => {
 
   const [filter, dispatchFilter] = useFilter();
   const {mateList, getMateList} = useMateList();
+  const {getLifestyle} = useLifestyle();
+  const {member, getMember} = useMember();
 
   // 룸메이트 게시글 탭을 누르면 필터에 반영
   const onTabClick = buttonName => {
@@ -37,10 +41,30 @@ const MateListPage = () => {
     dispatchFilter({type: 'MOVE_PAGE', page: page});
   };
 
+  // 현재 사용자가 라이프스타일 정보를 가지고 있는지 확인하는 함수이다.
+  const checkLifestyle = async () => {
+    const response = await getMember();
+    switch (response) {
+      case CODE.UNEXPECTED:
+        setUnexpectedError(true);
+        break;
+      default:
+        const lifestyleCode = await getLifestyle(response.nickname);
+        switch (lifestyleCode) {
+          case CODE.NOT_FOUND_MEMBER:
+            return navigate(USERS_LIFESTYLE);
+          case CODE.UNEXPECTED:
+            setUnexpectedError(true);
+            break;
+          default:
+        }
+    }
+  };
+
   useEffect(() => {
     const getDatas = async () => {
-      const response = await getMateList(filter);
-      switch (response) {
+      const mateListCode = await getMateList(filter);
+      switch (mateListCode) {
         case CODE.UNEXPECTED:
           setUnexpectedError(true);
           break;
@@ -49,6 +73,10 @@ const MateListPage = () => {
 
       setLoading(false);
     };
+
+    if (!member?.nickname) {
+      checkLifestyle();
+    }
     getDatas();
   }, [filter]);
 
