@@ -20,3 +20,5 @@ export const API_USERS_PROFILEIMAGE = `${process.env.REACT_APP_API_URL}/users/pr
 
 export const API_MATES = `${process.env.REACT_APP_API_URL}/mates`;
 export const API_MARK_MATES = `${process.env.REACT_APP_API_URL}/mark`;
+
+export const API_MATES_PERSONAL = `${process.env.REACT_APP_API_URL}/users/mates`;

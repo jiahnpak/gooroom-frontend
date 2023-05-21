@@ -9,7 +9,7 @@ import useMateList from 'hooks/useMateList';
 import {useEffect, useState} from 'react';
 import UnexpectedPage from './UnexpectedPage';
 import Loading from 'components/common/Loading/Loading';
-import Pagination from 'components/common/Pagination/Pagination';
+import Pagination from 'components/common/Pagination';
 import {Stack} from 'react-bootstrap';
 import {useNavigate} from 'react-router-dom';
 import {MATES, USERS_LIFESTYLE} from 'constants/path';
