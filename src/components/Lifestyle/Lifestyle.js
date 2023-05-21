@@ -27,7 +27,7 @@ const Lifestyle = ({nickname, loginMember, lifestyle, profileImage}) => {
 
   const onClickModifyBtn = () => {
     // "나는 이런 사람이에요!"의 수정 페이지로 이동
-    navigate(`${USERS_LIFESTYLE}?modify=true`);
+    navigate(`${USERS_LIFESTYLE}`, {state: lifestyle});
   };
 
   return (

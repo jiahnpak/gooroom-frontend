@@ -2,12 +2,10 @@ import LifestyleForm from 'components/LifestyleForm';
 import Loading from 'components/common/Loading/Loading';
 import Section from 'components/common/Section';
 import CODE from 'constants/errorCode';
-import {LOGIN} from 'constants/path';
-import useLifestyle from 'hooks/useLifestyle';
 import useMember from 'hooks/useMember';
 import {useState} from 'react';
 import {useEffect} from 'react';
-import {Navigate} from 'react-router-dom';
+import {useLocation} from 'react-router-dom';
 import UnexpectedPage from './UnexpectedPage';
 
 const LifestyleFormPage = () => {
@@ -18,7 +16,7 @@ const LifestyleFormPage = () => {
   const [loading, setLoading] = useState(true);
 
   const {member, getMember} = useMember();
-  const {lifestyle, getLifestyle} = useLifestyle();
+  const {state} = useLocation();
 
   useEffect(() => {
     const getDatas = async () => {
@@ -29,7 +27,6 @@ const LifestyleFormPage = () => {
           setUnexpectedError(true);
           break;
         default:
-          await getLifestyle(response?.nickname);
       }
 
       setLoading(false);
@@ -48,7 +45,7 @@ const LifestyleFormPage = () => {
 
   return (
     <Section title={title} description={description}>
-      <LifestyleForm member={member} lifestyle={lifestyle}></LifestyleForm>
+      <LifestyleForm member={member} lifestyle={state}></LifestyleForm>
     </Section>
   );
 };
