@@ -18,19 +18,25 @@ import {MATES} from 'constants/path';
 import {useRef, useState} from 'react';
 import useAlert from 'hooks/useAlert';
 import useInterceptedAxios from 'hooks/useInterceptedAxios';
+import {useDaumPostcodePopup} from 'react-daum-postcode';
 
 const MateForm = ({hasHome, modify}) => {
   const {
     register,
     handleSubmit,
     formState: {errors},
+    setValue,
   } = useForm({
     resolver: yupResolver(validationSchema),
     defaultValues: {
       residenceType: modify?.mateInfo['residenceType'],
       rentType: modify?.mateInfo['rentType'],
       roomPrice: modify?.mateInfo['roomPrice'],
-      address: modify?.mateInfo['city'],
+      address: [
+        modify?.mateInfo['city'],
+        modify?.mateInfo['roadName'],
+        modify?.mateInfo['buildingNumber'],
+      ].join(' '),
       title: modify?.mateInfo['title'],
       content: modify?.mateInfo['content'],
     },
@@ -40,8 +46,73 @@ const MateForm = ({hasHome, modify}) => {
   const navigate = useNavigate();
   const axiosMultipart = useInterceptedAxios();
 
+  // Daum Postcode 팝업과 관련된 함수를 반환하는 훅이다.
+  const open = useDaumPostcodePopup();
+
   const [roomImage, setRoomImage] = useState(null);
   const [encodedImage, setEncodedImage] = useState(modify?.roomImage);
+  const [addressDetail, setAddressDetail] = useState({
+    city: modify?.mateInfo['city'],
+    roadName: modify?.mateInfo['roadName'],
+    buildingNumber: modify?.mateInfo['buildingNumber'],
+    zipcode: modify?.mateInfo['zipcode'],
+    dong: '',
+  });
+
+  /**
+   * 주소 입력 버튼을 눌렀을 때 Daum Postcode 팝업을 띄우는 함수이다.
+   */
+  const onSearchAddress = () => {
+    open({onComplete: onCompleteAddress});
+  };
+
+  /**
+   * Daum Postcode를 통해 사용자가 검색을 완료했을 때
+   * 도로명 주소를 입력창에 출력하고, 각 구분별로 저장하는 함수이다.
+   * @param {object} data
+   */
+  const onCompleteAddress = data => {
+    // 전체 도로명 주소
+    const address = data?.autoRoadAddress || data?.roadAddress;
+
+    // 시·도 + 시·군·구
+    let city = '';
+    if (data?.sido) {
+      city += data.sido;
+    }
+    if (data?.sigungu) {
+      city += city !== '' ? ` ${data.sigungu}` : data.sigungu;
+    }
+
+    // 도로명
+    const roadName = data?.roadname;
+
+    // 건물번호
+    let buildingNumber = '';
+    if (!!roadName) {
+      // 도로명이 존재하지 않으면 건물번호를 구하지 않는다.
+      const words = address.split(' ');
+      const lastWord = words[words.length - 1];
+      if (/^[\d-]+$/.test(lastWord)) {
+        buildingNumber = lastWord;
+      }
+    }
+
+    // 우편번호
+    const zipcode = data?.zonecode;
+    // 법정동
+    const dong = data?.bname;
+
+    setAddressDetail(() => ({
+      city,
+      roadName,
+      buildingNumber,
+      zipcode,
+      dong,
+    }));
+
+    setValue('address', address);
+  };
 
   // 방 사진 파일을 위한 input 태그를 가리키는 ref
   const fileInput = useRef(null);
@@ -76,7 +147,7 @@ const MateForm = ({hasHome, modify}) => {
 
   // 게시글 제출 시 서버에 등록 요청을 보낸다.
   const onSubmit = async data => {
-    const {residenceType, rentType, roomPrice, address, title, content} = data;
+    const {residenceType, rentType, address, roomPrice, title, content} = data;
 
     const homePost = JSON.stringify({
       hasHome,
@@ -84,11 +155,11 @@ const MateForm = ({hasHome, modify}) => {
       residenceType,
       rentType,
       roomPrice,
-      city: address,
-      dong: address,
-      roadName: address,
-      buildingNumber: address,
-      zipcode: address,
+      city: addressDetail.city,
+      dong: addressDetail.dong,
+      roadName: addressDetail.roadName,
+      buildingNumber: addressDetail.buildingNumber,
+      zipcode: addressDetail.zipcode,
       title,
       content,
     });
@@ -178,12 +249,24 @@ const MateForm = ({hasHome, modify}) => {
           />
         </Form.Group>
         <Form.Group>
-          <Form.Label>집 주소 (상세주소 제외)</Form.Label>
-          <Form.Control
-            placeholder="집 주소를 입력해주세요"
-            {...register('address')}
-            isInvalid={!!errors['address']}
-          />
+          <Form.Label>집 주소</Form.Label>
+          <Stack direction="horizontal" gap={2}>
+            <Form.Control
+              placeholder="집 주소를 입력해주세요"
+              {...register('address')}
+              isInvalid={!!errors['address']}
+              disabled={hasHome}
+            />
+            {hasHome && (
+              <Button
+                variant="secondary"
+                onClick={onSearchAddress}
+                style={{whiteSpace: 'nowrap'}}
+              >
+                주소 검색
+              </Button>
+            )}
+          </Stack>
         </Form.Group>
         <hr />
         <Form.Group>
