@@ -19,6 +19,8 @@ import {useRef, useState} from 'react';
 import useAlert from 'hooks/useAlert';
 import useInterceptedAxios from 'hooks/useInterceptedAxios';
 import {useDaumPostcodePopup} from 'react-daum-postcode';
+import CODE from 'constants/errorCode';
+import {USERS} from 'constants/path';
 
 const MateForm = ({hasHome, modify}) => {
   const {
@@ -189,6 +191,14 @@ const MateForm = ({hasHome, modify}) => {
       const errorCode = err?.response?.data?.errorCode;
 
       switch (errorCode) {
+        case CODE.ALREADY_PROGRESS:
+          showAlert(
+            'danger',
+            '이미 게시글이 존재합니다. 추가 게시글 작성을 원한다면, 현재 게시글의 상태를 완료로 변경하거나 게시글을 삭제해주세요.',
+            2000,
+          );
+          navigate(USERS);
+          break;
         default: // 기타 에러에 대한 처리
           showAlert(
             'danger',
