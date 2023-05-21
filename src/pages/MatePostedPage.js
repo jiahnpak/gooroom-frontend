@@ -24,6 +24,7 @@ const MatePostedPage = () => {
     mateInfo,
     profileImage,
     roomImage,
+    setMateInfo,
     getMateInfo,
     getProfileImage,
     getRoomImage,
@@ -90,9 +91,12 @@ const MatePostedPage = () => {
     <>
       <Section title={title}>
         <MatePosted
+          postId={postId}
           mateInfo={mateInfo}
+          setMateInfo={setMateInfo}
           profileImage={profileImage}
           roomImage={roomImage}
+          isWriter={mateInfo.nickname === loginMember.nickname}
         ></MatePosted>
       </Section>
     </>

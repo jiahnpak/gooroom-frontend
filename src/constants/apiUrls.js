@@ -17,3 +17,4 @@ export const API_USERS_LIFESTYLE = `${process.env.REACT_APP_API_URL}/users/lifes
 export const API_USERS_PROFILEIMAGE = `${process.env.REACT_APP_API_URL}/users/profileImage`;
 
 export const API_MATES = `${process.env.REACT_APP_API_URL}/mates`;
+export const API_MARK_MATES = `${process.env.REACT_APP_API_URL}/mark`;
