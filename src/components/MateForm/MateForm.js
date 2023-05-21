@@ -99,7 +99,7 @@ const MateForm = ({hasHome, modify}) => {
     formData.append('homePost', homePostBlob);
     formData.append('file', roomImage);
 
-    const url = API_MATES + (!!modify && `/${modify.postId}`);
+    const url = !modify ? `${API_MATES}` : `${API_MATES}/${modify.postId}`;
     const method = !modify ? 'post' : 'patch';
 
     try {
