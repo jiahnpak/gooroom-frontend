@@ -11,6 +11,8 @@ export const API_LOGIN_REFRESH = `${process.env.REACT_APP_API_URL}/login/refresh
 
 export const API_SIGNUP_EMAIL = `${process.env.REACT_APP_API_URL}/signup/email`;
 
+export const API_LOGOUT = `${process.env.REACT_APP_API_URL}/signout`;
+
 export const API_USERS = `${process.env.REACT_APP_API_URL}/users`;
 export const API_USERS_LIFESTYLE = `${process.env.REACT_APP_API_URL}/users/lifestyle`;
 
