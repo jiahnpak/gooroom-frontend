@@ -19,7 +19,7 @@ import {useRef, useState} from 'react';
 import useAlert from 'hooks/useAlert';
 import useInterceptedAxios from 'hooks/useInterceptedAxios';
 
-const MateForm = ({hasHome}) => {
+const MateForm = ({hasHome, modify}) => {
   const {
     register,
     handleSubmit,
@@ -27,7 +27,12 @@ const MateForm = ({hasHome}) => {
   } = useForm({
     resolver: yupResolver(validationSchema),
     defaultValues: {
-      roomPrice: 0,
+      residenceType: modify?.mateInfo['residenceType'],
+      rentType: modify?.mateInfo['rentType'],
+      roomPrice: modify?.mateInfo['roomPrice'],
+      address: modify?.mateInfo['city'],
+      title: modify?.mateInfo['title'],
+      content: modify?.mateInfo['content'],
     },
   });
 
@@ -36,7 +41,7 @@ const MateForm = ({hasHome}) => {
   const axiosMultipart = useInterceptedAxios();
 
   const [roomImage, setRoomImage] = useState(null);
-  const [encodedImage, setEncodedImage] = useState(null);
+  const [encodedImage, setEncodedImage] = useState(modify?.roomImage);
 
   // 방 사진 파일을 위한 input 태그를 가리키는 ref
   const fileInput = useRef(null);
@@ -94,10 +99,13 @@ const MateForm = ({hasHome}) => {
     formData.append('homePost', homePostBlob);
     formData.append('file', roomImage);
 
+    const url = API_MATES + (!!modify && `/${modify.postId}`);
+    const method = !modify ? 'post' : 'patch';
+
     try {
       const response = await axiosMultipart({
-        method: 'post',
-        url: API_MATES,
+        method: method,
+        url: url,
         data: formData,
       });
 
