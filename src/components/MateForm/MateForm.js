@@ -21,6 +21,7 @@ import useInterceptedAxios from 'hooks/useInterceptedAxios';
 import {useDaumPostcodePopup} from 'react-daum-postcode';
 import CODE from 'constants/errorCode';
 import {USERS} from 'constants/path';
+import {gu} from 'constants/roomConstants';
 
 const MateForm = ({hasHome, modify}) => {
   const {
@@ -39,6 +40,11 @@ const MateForm = ({hasHome, modify}) => {
         modify?.mateInfo['roadName'],
         modify?.mateInfo['buildingNumber'],
       ].join(' '),
+      city: modify?.mateInfo['city'],
+      roadName: modify?.mateInfo['roadName'],
+      buildingNumber: modify?.mateInfo['buildingNumber'],
+      zipcode: modify?.mateInfo['zipcode'],
+      dong: modify?.mateInfo['dong'],
       title: modify?.mateInfo['title'],
       content: modify?.mateInfo['content'],
     },
@@ -53,13 +59,6 @@ const MateForm = ({hasHome, modify}) => {
 
   const [roomImage, setRoomImage] = useState(null);
   const [encodedImage, setEncodedImage] = useState(modify?.roomImage);
-  const [addressDetail, setAddressDetail] = useState({
-    city: modify?.mateInfo['city'],
-    roadName: modify?.mateInfo['roadName'],
-    buildingNumber: modify?.mateInfo['buildingNumber'],
-    zipcode: modify?.mateInfo['zipcode'],
-    dong: '',
-  });
 
   /**
    * 주소 입력 버튼을 눌렀을 때 Daum Postcode 팝업을 띄우는 함수이다.
@@ -105,13 +104,11 @@ const MateForm = ({hasHome, modify}) => {
     // 법정동
     const dong = data?.bname;
 
-    setAddressDetail(() => ({
-      city,
-      roadName,
-      buildingNumber,
-      zipcode,
-      dong,
-    }));
+    setValue('city', city);
+    setValue('roadName', roadName);
+    setValue('buildingNumber', buildingNumber);
+    setValue('zipcode', zipcode);
+    setValue('dong', dong);
 
     setValue('address', address);
   };
@@ -149,7 +146,18 @@ const MateForm = ({hasHome, modify}) => {
 
   // 게시글 제출 시 서버에 등록 요청을 보낸다.
   const onSubmit = async data => {
-    const {residenceType, rentType, address, roomPrice, title, content} = data;
+    const {
+      residenceType,
+      rentType,
+      city,
+      roadName,
+      buildingNumber,
+      zipcode,
+      dong,
+      roomPrice,
+      title,
+      content,
+    } = data;
 
     const homePost = JSON.stringify({
       hasHome,
@@ -157,11 +165,11 @@ const MateForm = ({hasHome, modify}) => {
       residenceType,
       rentType,
       roomPrice,
-      city: addressDetail.city,
-      dong: addressDetail.dong,
-      roadName: addressDetail.roadName,
-      buildingNumber: addressDetail.buildingNumber,
-      zipcode: addressDetail.zipcode,
+      city,
+      dong,
+      roadName,
+      buildingNumber,
+      zipcode,
       title,
       content,
     });
@@ -195,7 +203,7 @@ const MateForm = ({hasHome, modify}) => {
           showAlert(
             'danger',
             '이미 게시글이 존재합니다. 추가 게시글 작성을 원한다면, 현재 게시글의 상태를 완료로 변경하거나 게시글을 삭제해주세요.',
-            2000,
+            4000,
           );
           navigate(USERS);
           break;
@@ -260,14 +268,14 @@ const MateForm = ({hasHome, modify}) => {
         </Form.Group>
         <Form.Group>
           <Form.Label>집 주소</Form.Label>
-          <Stack direction="horizontal" gap={2}>
-            <Form.Control
-              placeholder="집 주소를 입력해주세요"
-              {...register('address')}
-              isInvalid={!!errors['address']}
-              disabled={hasHome}
-            />
-            {hasHome && (
+          {hasHome ? (
+            <Stack direction="horizontal" gap={2}>
+              <Form.Control
+                placeholder="집 주소를 입력해주세요"
+                {...register('address')}
+                isInvalid={!!errors['address']}
+                disabled
+              />
               <Button
                 variant="secondary"
                 onClick={onSearchAddress}
@@ -275,8 +283,22 @@ const MateForm = ({hasHome, modify}) => {
               >
                 주소 검색
               </Button>
-            )}
-          </Stack>
+            </Stack>
+          ) : (
+            <Stack direction="horizontal" gap={2}>
+              <Form.Select {...register('city')} isInvalid={!!errors['city']}>
+                {gu.map((gu, index) => (
+                  <option key={index}>{gu}</option>
+                ))}
+              </Form.Select>
+              <Form.Control
+                placeholder="행정동을 입력해주세요"
+                {...register('dong')}
+                isInvalid={!!errors['dong']}
+                maxLength="10"
+              />
+            </Stack>
+          )}
         </Form.Group>
         <hr />
         <Form.Group>

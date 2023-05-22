@@ -16,7 +16,22 @@ export const validationSchema = yup.object().shape({
     .test({test: value => value % priceStep === 0}),
   address: yup // 지역 유효성 정의
     .string()
-    .required(),
+    .required(''),
+  city: yup // 시·도 + 시·군·구 유효성 정의
+    .string()
+    .nullable(),
+  roadName: yup // 도로명 유효성 정의
+    .string()
+    .nullable(),
+  buildingNumber: yup // 건물번호 유효성 정의
+    .string()
+    .nullable(),
+  zipcode: yup // 우편번호 유효성 정의
+    .string()
+    .nullable(),
+  dong: yup // 법정동 유효성 정의
+    .string()
+    .nullable(),
   title: yup // 게시글 제목 유효성 정의
     .string()
     .required()
