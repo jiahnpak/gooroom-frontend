@@ -289,8 +289,14 @@ const MatePosted = ({
           {/* 주소 */}
           <Stack direction="horizontal" gap={1}>
             <span>{mateInfo?.city}</span>
-            <span>{mateInfo?.roadName}</span>
-            <span>{mateInfo?.buildingNumber}</span>
+            {mateInfo?.hasHome ? (
+              <>
+                <span>{mateInfo?.roadName}</span>
+                <span>{mateInfo?.buildingNumber}</span>
+              </>
+            ) : (
+              <span>{mateInfo?.dong}</span>
+            )}
           </Stack>
         </PostedMetadata>
 

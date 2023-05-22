@@ -37,8 +37,9 @@ const MateList = ({mateList}) => {
             <ListItemRight direction="horizontal" gap={2}>
               <ListItemAddress>
                 <span>{mates?.city && `${mates.city} `}</span>
-                <span>{mates?.dong && `${mates.dong} `}</span>
-                <span>{mates?.roadName && `${mates.roadName} `}</span>
+                <span>
+                  {mates?.dong ? `${mates.dong} ` : `${mates.roadName} `}
+                </span>
               </ListItemAddress>
               <span>{residenceTypeFormat[mates?.residenceType]}</span>
               <span>{rentTypeFormat[mates?.rentType]}</span>

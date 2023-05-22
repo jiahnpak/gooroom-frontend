@@ -43,7 +43,6 @@ const MateForm = ({hasHome, modify}) => {
       city: modify?.mateInfo['city'],
       roadName: modify?.mateInfo['roadName'],
       buildingNumber: modify?.mateInfo['buildingNumber'],
-      zipcode: modify?.mateInfo['zipcode'],
       dong: modify?.mateInfo['dong'],
       title: modify?.mateInfo['title'],
       content: modify?.mateInfo['content'],
@@ -99,15 +98,12 @@ const MateForm = ({hasHome, modify}) => {
       }
     }
 
-    // 우편번호
-    const zipcode = data?.zonecode;
     // 법정동
     const dong = data?.bname;
 
     setValue('city', city);
     setValue('roadName', roadName);
     setValue('buildingNumber', buildingNumber);
-    setValue('zipcode', zipcode);
     setValue('dong', dong);
 
     setValue('address', address);
@@ -152,7 +148,6 @@ const MateForm = ({hasHome, modify}) => {
       city,
       roadName,
       buildingNumber,
-      zipcode,
       dong,
       roomPrice,
       title,
@@ -169,7 +164,6 @@ const MateForm = ({hasHome, modify}) => {
       dong,
       roadName,
       buildingNumber,
-      zipcode,
       title,
       content,
     });

@@ -17,7 +17,7 @@ const useMatePosted = () => {
     city: null,
     roadName: null,
     buildingNumber: null,
-    zipcode: null,
+    dong: null,
     content: null,
     nickname: null,
     age: null,

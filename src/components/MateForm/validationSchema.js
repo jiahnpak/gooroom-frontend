@@ -26,9 +26,6 @@ export const validationSchema = yup.object().shape({
   buildingNumber: yup // 건물번호 유효성 정의
     .string()
     .nullable(),
-  zipcode: yup // 우편번호 유효성 정의
-    .string()
-    .nullable(),
   dong: yup // 법정동 유효성 정의
     .string()
     .nullable(),
