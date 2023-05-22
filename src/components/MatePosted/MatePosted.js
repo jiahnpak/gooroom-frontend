@@ -328,11 +328,13 @@ const MatePosted = ({
             </DefaultDiv>
             {isWriter && (
               <>
-                <DefaultDiv style={{marginRight: '10px'}}>
-                  <Button variant="secondary" onClick={onClickModify}>
-                    수정
-                  </Button>
-                </DefaultDiv>
+                {mateInfo?.postStatus !== 'COMPLETE' && (
+                  <DefaultDiv style={{marginRight: '10px'}}>
+                    <Button variant="secondary" onClick={onClickModify}>
+                      수정
+                    </Button>
+                  </DefaultDiv>
+                )}
                 <DefaultDiv style={{marginRight: '10px'}}>
                   <Button variant="danger" onClick={showRemovalModal}>
                     삭제

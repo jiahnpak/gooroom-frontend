@@ -156,7 +156,7 @@ const MateForm = ({hasHome, modify}) => {
 
     const homePost = JSON.stringify({
       hasHome,
-      postStatus: 'PROGRESS',
+      postStatus: modify?.mateInfo['postStatus'] || 'PROGRESS',
       residenceType,
       rentType,
       roomPrice,
@@ -221,6 +221,7 @@ const MateForm = ({hasHome, modify}) => {
               <Form.Select
                 {...register('residenceType')}
                 isInvalid={!!errors['residenceType']}
+                disabled={!!modify}
               >
                 {Object.entries(residenceTypeFormat).map(
                   ([value, label], index) => (
