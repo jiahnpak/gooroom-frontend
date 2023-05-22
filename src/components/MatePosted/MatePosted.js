@@ -25,6 +25,7 @@ import useAlert from 'hooks/useAlert';
 import {useState} from 'react';
 import Dropdown from 'components/common/Dropdown/Dropdown';
 import DropdownItem from 'components/common/Dropdown/DropdownItem';
+import KakaoMap from './KaKaoMap';
 
 const DefaultDiv = styled.div`
   display: flex;
@@ -68,6 +69,12 @@ const MatePosted = ({
   const navigate = useNavigate();
 
   const [removalVisible, setRemovalVisible] = useState(false);
+
+  const address = [
+    mateInfo?.city,
+    mateInfo?.roadName,
+    mateInfo?.buildingNumber,
+  ].join(' ');
 
   /**
    * 작성자의 '나는 이런 사람이에요' 페이지로 이동시키는 함수이다.
@@ -284,7 +291,6 @@ const MatePosted = ({
             <span>{mateInfo?.city}</span>
             <span>{mateInfo?.roadName}</span>
             <span>{mateInfo?.buildingNumber}</span>
-            <span>{mateInfo?.zipcode}</span>
           </Stack>
         </PostedMetadata>
 
@@ -298,6 +304,8 @@ const MatePosted = ({
             <Image src={roomImage} fluid></Image>
           </DefaultDiv>
         )}
+
+        {mateInfo.hasHome && <KakaoMap address={address} />}
 
         {/* 게시글 버튼 그룹 */}
         <Row>
