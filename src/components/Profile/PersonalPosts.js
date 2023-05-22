@@ -22,7 +22,7 @@ const PersonalPosts = () => {
     try {
       const response = await jwtAxios.get(`${API_MATES_PERSONAL}`, {
         params: {
-          page,
+          page: page - 1,
         },
       });
       const data = response?.data;

@@ -78,7 +78,7 @@ const RoomPage = () => {
     console.log(gu, dong, page);
     try {
       const response = await jwtAxios.get(API_ROOMS, {
-        params: {gu, dong, page},
+        params: {gu, dong, page: page - 1},
       });
       const data = response?.data;
       if (!data) {

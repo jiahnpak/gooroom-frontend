@@ -17,6 +17,7 @@ const useMateList = () => {
       const response = await jwtAxios.get(`${API_MATES}`, {
         params: {
           ...filters,
+          page: filters.page - 1,
         },
       });
       const data = response?.data;
