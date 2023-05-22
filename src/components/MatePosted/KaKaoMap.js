@@ -1,10 +1,9 @@
-/*global kakao */
+// global kakao
 import React, {useEffect} from 'react';
-import {Children} from 'react';
 
 const {kakao} = window;
 
-const KakaoMap = address => {
+const KakaoMap = ({address}) => {
   useEffect(() => {
     const container = document.getElementById('map');
     const options = {
@@ -16,22 +15,18 @@ const KakaoMap = address => {
     //위도, 경도로 변환 및 마커표시
 
     var geocoder = new kakao.maps.services.Geocoder();
-    geocoder.addressSearch(
-      address.address,
-      (result, status) => {
-        if (status === kakao.maps.services.Status.OK) {
-          var coords = new kakao.maps.LatLng(result[0].y, result[0].x);
+    geocoder.addressSearch(address, (result, status) => {
+      if (status === kakao.maps.services.Status.OK) {
+        var coords = new kakao.maps.LatLng(result[0].y, result[0].x);
 
-          var marker = new kakao.maps.Marker({
-            map: map,
-            position: coords,
-          });
+        var marker = new kakao.maps.Marker({
+          map: map,
+          position: coords,
+        });
 
-          map.setCenter(coords);
-        }
-      },
-      [address],
-    );
+        map.setCenter(coords);
+      }
+    });
   }, []);
 
   return (

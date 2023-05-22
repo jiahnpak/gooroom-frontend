@@ -1,11 +1,9 @@
 import Profile from 'components/Profile';
 import Loading from 'components/common/Loading/Loading';
 import CODE from 'constants/errorCode';
-import {LOGIN} from 'constants/path';
 import useMember from 'hooks/useMember';
 import {useEffect} from 'react';
 import {useState} from 'react';
-import {Navigate} from 'react-router-dom';
 import UnexpectedPage from './UnexpectedPage';
 
 const ProfilePage = () => {
