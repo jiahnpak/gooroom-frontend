@@ -16,7 +16,7 @@ import {validationSchema} from './validationSchema';
 import useInterceptedAxios from 'hooks/useInterceptedAxios';
 import {API_USERS_LIFESTYLE} from 'constants/apiUrls';
 import {useAlert} from 'hooks/useAlert';
-import {useNavigate, useSearchParams} from 'react-router-dom';
+import {useNavigate} from 'react-router-dom';
 import {USERS_LIFESTYLE} from 'constants/path';
 
 const LifestyleForm = ({member, lifestyle}) => {
@@ -27,13 +27,13 @@ const LifestyleForm = ({member, lifestyle}) => {
   } = useForm({
     resolver: yupResolver(validationSchema),
     defaultValues: {
-      [smokingType.name]: lifestyle.smokingType,
-      [drinkingType.name]: lifestyle.drinkingType,
-      [sleepingHabitType.name]: lifestyle.sleepingHabitType,
-      [wakeupType.name]: lifestyle.wakeupType,
-      [organizeType.name]: lifestyle.organizeType,
-      [cleanupType.name]: lifestyle.cleanupType,
-      [introduce.name]: lifestyle.introduce,
+      [smokingType.name]: lifestyle?.smokingType,
+      [drinkingType.name]: lifestyle?.drinkingType,
+      [sleepingHabitType.name]: lifestyle?.sleepingHabitType,
+      [wakeupType.name]: lifestyle?.wakeupType,
+      [organizeType.name]: lifestyle?.organizeType,
+      [cleanupType.name]: lifestyle?.cleanupType,
+      [introduce.name]: lifestyle?.introduce,
     },
   });
 
@@ -43,16 +43,12 @@ const LifestyleForm = ({member, lifestyle}) => {
   // 알림 창 표시를 위한 훅
   const showAlert = useAlert();
 
-  // 쿼리스트링 추출을 위해 사용
-  const [searchParams] = useSearchParams();
-
   const jwtAxios = useInterceptedAxios();
 
   const onSubmit = async data => {
     const body = JSON.stringify(data);
-    const isModify = searchParams.get('modify');
 
-    const method = isModify ? 'patch' : 'post';
+    const method = !!lifestyle ? 'patch' : 'post';
 
     try {
       const response = await jwtAxios({

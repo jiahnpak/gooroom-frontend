@@ -26,6 +26,9 @@ const useProfileImage = () => {
 
       setProfileImage(`data:image/${imageType};base64,${base64Image}`);
     } catch (err) {
+      if (err?.response?.status === CODE.NOT_FOUND_MEMBER) {
+        return CODE.NOT_FOUND_MEMBER;
+      }
       const errorCode = err?.response?.data?.errorCode;
       if (!errorCode) {
         return CODE.UNEXPECTED;

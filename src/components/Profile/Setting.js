@@ -1,5 +1,5 @@
 import Button from 'components/common/Button/Button';
-import {nameMax, nameMin, pwdMax} from 'constants/validation';
+import {nameMax, nameMin, pwdMax} from 'constants/memberConstants';
 import {Col, Form, Image, Modal, Row} from 'react-bootstrap';
 import {FaRegEdit} from 'react-icons/fa';
 import {useRef} from 'react';
@@ -80,7 +80,7 @@ const Settings = ({memberMethods, profileImageMethods}) => {
 
     try {
       // 서버에 비동기로 수정 요청을 보낸다.
-      const response = await jwtAxios.patch(API_USERS, body);
+      const response = await jwtAxios.put(API_USERS, body);
       if (!response) {
         throw new Error('서버와 연결이 불안정합니다.');
       }

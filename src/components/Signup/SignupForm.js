@@ -1,7 +1,13 @@
 import {Col, Form, Modal, Row} from 'react-bootstrap';
 import Button from 'components/common/Button';
 import ModalButton from './ModalButton';
-import {pwdMin, pwdMax, emailMax, nameMax, nameMin} from 'constants/validation';
+import {
+  pwdMin,
+  pwdMax,
+  emailMax,
+  nameMax,
+  nameMin,
+} from 'constants/memberConstants';
 import {useState} from 'react';
 import useCheckAll from 'hooks/useCheckAll';
 

@@ -20,7 +20,9 @@ import LifestylePage from 'pages/LifestylePage';
 import LoginNaver from 'components/Login/LoginNaver';
 import {RecoilRoot} from 'recoil';
 import NotFoundPage from 'pages/NotFoundPage';
-import MateList from 'components/MateList/MateList';
+import MateListPage from 'pages/MateListPage';
+import MateFormPage from 'pages/MateFormPage';
+import MatePostedPage from 'pages/MatePostedPage';
 
 const App = () => {
   return (
@@ -41,10 +43,6 @@ const App = () => {
                     />
                     <Route path={PATH.LOGOUT} element={<Logout />} />
                     <Route
-                      path={PATH.MATELIST}
-                      element={<MateList></MateList>}
-                    />
-                    <Route
                       path={PATH.REDIRECT_URI_KAKAO}
                       element={<LoginKakao />}
                     />
@@ -62,6 +60,11 @@ const App = () => {
                       path={`${PATH.USERS_LIFESTYLE}/:nickname`}
                       element={<LifestylePage />}
                     />
+                    <Route path={PATH.MATES}>
+                      <Route index element={<MateListPage />} />
+                      <Route path=":postId" element={<MatePostedPage />} />
+                      <Route path="new" element={<MateFormPage />} />
+                    </Route>
                   </Route>
                   <Route path="*" element={<NotFoundPage />} />
                 </Routes>

@@ -1,8 +1,6 @@
-import {Card} from 'react-bootstrap';
 import AuthForm from 'components/common/AuthForm';
 import Link from 'components/common/Link';
 import {LOGIN_EMAIL} from 'constants/path';
-import kakaoLoginImg from 'assets/images/kakao_login_medium_wide.png';
 import naverLoginImg from 'assets/images/naver_login_white.png';
 import {API_LOGIN_KAKAO, API_LOGIN_NAVER} from 'constants/apiUrls';
 import {FormFooter, IconContainer} from './styles';

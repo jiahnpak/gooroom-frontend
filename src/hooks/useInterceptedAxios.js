@@ -1,18 +1,12 @@
 import {useEffect} from 'react';
 import customAxios from 'utils/customAxios';
-import {getRefreshToken} from 'utils/RefreshToken';
-import useAlert from './useAlert';
-import {useNavigate} from 'react-router-dom';
-import {LOGIN} from 'constants/path';
-import CODE from 'constants/errorCode';
 import {useRecoilState} from 'recoil';
 import {AuthState} from 'stores/AuthState';
+import useRefresh from './useRefresh';
 
 const useInterceptedAxios = () => {
   const [auth, setAuth] = useRecoilState(AuthState);
-
-  const showAlert = useAlert();
-  const navigate = useNavigate();
+  const refresh = useRefresh();
 
   useEffect(() => {
     const requestIntercept = customAxios.interceptors.request.use(
@@ -21,45 +15,32 @@ const useInterceptedAxios = () => {
         if (!config.headers['Authorization']) {
           config.headers['Authorization'] = `Bearer ${auth.accessToken}`;
         }
+        // 요청에서 보내는 데이터가 FormData라면 content type을 바꾼다.
+        if (config.data instanceof FormData) {
+          config.headers['Content-Type'] = 'multipart/form-data';
+        } else {
+          config.headers['Content-Type'] = 'application/json';
+        }
         return config;
       },
       error => Promise.reject(error),
     );
     const responseIntercept = customAxios.interceptors.response.use(
-      response => {
-        // useInterceptedAxios를 통한 요청에 대한 서버의 응답 헤더에
-        // 'authorization'으로 액세스 토큰이 전달된다면 재발급된 것이므로 갱신한다.
-        const accessToken = response?.headers['authorization'];
-        if (accessToken) {
-          setAuth({authenticated: true, accessToken: accessToken});
-        }
-        return response;
-      },
-      error => {
+      response => response,
+      async error => {
         const prevRequest = error?.config;
-        if (
-          error?.response?.data?.errorCode === CODE.INVALIDATE_TOKEN &&
-          !prevRequest?.sent
-        ) {
-          // 토큰이 만료되었을 때 리프레시 토큰을 헤더에 넣어서 제전송
+        if (error?.response?.status === 406 && !prevRequest?.sent) {
+          // 토큰이 만료되었을 때 재발급받아서 곧바로 전송
           prevRequest.sent = true;
-          const refreshToken = getRefreshToken();
 
-          // 리프레시 토큰도 만료된 경우 로그인 페이지로 이동
-          if (!refreshToken) {
-            setAuth({authenticated: false, accessToken: null});
-            showAlert(
-              'light',
-              '토큰 허용 시간이 만료되었습니다. 개인정보보호를 위해 다시 로그인해주세요.',
-              3000,
-            );
-            return navigate(LOGIN);
-          }
+          const newAccessToken = await refresh();
+          setAuth(prev => ({
+            ...prev,
+            accessToken: newAccessToken,
+          }));
 
-          // 이전 요청 헤더에 리프레시 토큰을 'Authorization-refresh'로 전달한다.
-          prevRequest.headers[
-            'Authorization-refresh'
-          ] = `Bearer ${refreshToken}`;
+          // 이전 요청 헤더에 새 액세스 토큰을 'Authorization'로 전달한다.
+          prevRequest.headers['Authorization'] = `Bearer ${newAccessToken}`;
           return customAxios(prevRequest);
         }
         return Promise.reject(error);
@@ -71,7 +52,7 @@ const useInterceptedAxios = () => {
       customAxios.interceptors.response.eject(responseIntercept);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [auth, setAuth]);
+  }, [auth]);
 
   return customAxios;
 };

@@ -2,7 +2,7 @@ import styled, {css} from 'styled-components';
 
 const activeStyle = css`
   ${props =>
-    props.active &&
+    props.active === 'true' &&
     css`
       border-bottom: 3px solid ${({theme}) => theme.colors.primary};
     `}
@@ -35,7 +35,7 @@ const Tab = ({id, title, activeTab, setActiveTab}) => {
   };
 
   return (
-    <StyledTab onClick={onClick} active={activeTab === id}>
+    <StyledTab onClick={onClick} active={String(activeTab === id)}>
       {title}
     </StyledTab>
   );

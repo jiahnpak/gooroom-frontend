@@ -6,7 +6,7 @@ import {
   nameMin,
   pwdMax,
   pwdMin,
-} from 'constants/validation';
+} from 'constants/memberConstants';
 
 // 프로필 수정 폼의 유효성 검증을 위한 yup 객체
 export const profileSchema = yup.object().shape({

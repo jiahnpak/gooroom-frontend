@@ -7,7 +7,11 @@ export const API_LOGIN_KAKAO = `https://kauth.kakao.com/oauth/authorize?response
 
 export const API_LOGIN_NAVER = `https://nid.naver.com/oauth2.0/authorize?response_type=code&client_id=${process.env.REACT_APP_CLIENT_ID_NAVER}&redirect_uri=${REDIRECT_URI_NAVER}}`;
 
+export const API_LOGIN_REFRESH = `${process.env.REACT_APP_API_URL}/login/refresh`;
+
 export const API_SIGNUP_EMAIL = `${process.env.REACT_APP_API_URL}/signup/email`;
+
+export const API_LOGOUT = `${process.env.REACT_APP_API_URL}/signout`;
 
 export const API_USERS = `${process.env.REACT_APP_API_URL}/users`;
 export const API_USERS_LIFESTYLE = `${process.env.REACT_APP_API_URL}/users/lifestyle`;
@@ -16,3 +20,8 @@ export const API_USERS_PROFILEIMAGE = `${process.env.REACT_APP_API_URL}/users/pr
 
 export const API_ROOMS = `${process.env.REACT_APP_API_URL}/rooms`;
 export const API_ROOMS_OPTIONS = `${process.env.REACT_APP_API_URL}/rooms/options`;
+
+export const API_MATES = `${process.env.REACT_APP_API_URL}/mates`;
+export const API_MARK_MATES = `${process.env.REACT_APP_API_URL}/mark`;
+
+export const API_MATES_PERSONAL = `${process.env.REACT_APP_API_URL}/users/mates`;

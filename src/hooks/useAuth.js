@@ -14,5 +14,3 @@ export const useAuthState = () => {
 export const useAuthDispatch = () => {
   return useContext(AuthDispatchContext);
 };
-
-export default useAuthState;
