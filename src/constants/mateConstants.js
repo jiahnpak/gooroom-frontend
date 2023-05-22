@@ -1,7 +1,7 @@
 export const priceMax = 999999999;
 export const dongMax = 20;
 
-export const priceStep = 5000;
+export const priceStep = 10000;
 export const titleMax = 25;
 export const contentMax = 500;
 
