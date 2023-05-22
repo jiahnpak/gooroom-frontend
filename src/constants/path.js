@@ -13,3 +13,6 @@ export const USERS = '/users';
 export const LIFESTYLE = 'lifestyle';
 export const USERS_LIFESTYLE = `${USERS}/${LIFESTYLE}`;
 export const MATELIST = '/mates';
+export const MATELIST_POSTED = '/mates/:id';
+
+export const ROOMS = '/rooms';

@@ -13,3 +13,6 @@ export const API_USERS = `${process.env.REACT_APP_API_URL}/users`;
 export const API_USERS_LIFESTYLE = `${process.env.REACT_APP_API_URL}/users/lifestyle`;
 
 export const API_USERS_PROFILEIMAGE = `${process.env.REACT_APP_API_URL}/users/profileImage`;
+
+export const API_ROOMS = `${process.env.REACT_APP_API_URL}/rooms`;
+export const API_ROOMS_OPTIONS = `${process.env.REACT_APP_API_URL}/rooms/options`;
