@@ -1,16 +1,24 @@
 import Pagination from 'components/common/Pagination/Pagination';
 import {API_MATES_PERSONAL} from 'constants/apiUrls';
-import CODE from 'constants/errorCode';
+import {
+  postStatusFormat,
+  rentTypeFormat,
+  residenceTypeFormat,
+} from 'constants/mateConstants';
+import {MATES} from 'constants/path';
 import useAlert from 'hooks/useAlert';
 import useInterceptedAxios from 'hooks/useInterceptedAxios';
 import React from 'react';
 import {useState} from 'react';
 import {useEffect} from 'react';
-import {Image, Table} from 'react-bootstrap';
+import {Table} from 'react-bootstrap';
+import {useNavigate} from 'react-router-dom';
+import {formatAgeGroup, formatPrice} from 'utils/mateUtils';
 
 const PersonalPosts = () => {
   const jwtAxios = useInterceptedAxios();
   const showAlert = useAlert();
+  const navigate = useNavigate();
 
   const [page, setPage] = useState(1);
   const [personalPosts, setPersonalPosts] = useState({
@@ -49,20 +57,14 @@ const PersonalPosts = () => {
     getPersonalPosts(page);
   }, [page]);
 
-  console.log(personalPosts);
-
   return (
-    <>
+    <div className="d-flex flex-column align-items-center">
       <Table striped borderless hover responsive size="sm">
         <thead>
           <tr>
-            <th>
-              <Image fluid roundedCircle thumbnail></Image>
-            </th>
             <th>제목</th>
             <th>연령대</th>
             <th>매칭 상태</th>
-            <th>게시글 유형</th>
             <th>주소</th>
             <th>거주 유형</th>
             <th>월전세</th>
@@ -71,15 +73,25 @@ const PersonalPosts = () => {
         </thead>
         <tbody>
           {personalPosts?.mateList?.map((personalPosts, key) => (
-            <tr key={key}>
-              <td>personalPosts?.title</td>
-              <td>formatAgeGroup(personalPosts?.age)</td>
-              <td>postStatusFormat[personalPosts?.postStatus]</td>
-              <td>hasHomeFormat[personalPosts?.hasHome]</td>
-              <td>personalPosts?.city && `${personalPosts.city} `</td>
-              <td>residenceTypeFormat[personalPosts?.residenceType]</td>
-              <td>rentTypeFormat[personalPosts?.rentType]</td>
-              <td>formatPrice(personalPosts?.roomPrice)</td>
+            <tr
+              key={key}
+              style={{cursor: 'pointer'}}
+              onClick={() => navigate(`${MATES}/${personalPosts.postId}`)}
+            >
+              <td>{personalPosts?.title}</td>
+              <td>{formatAgeGroup(personalPosts?.age)}</td>
+              <td>{postStatusFormat[personalPosts?.postStatus]}</td>
+              <td>
+                <span>{`${personalPosts?.city} `}</span>
+                <span>
+                  {personalPosts?.dong
+                    ? `${personalPosts.dong} `
+                    : `${personalPosts.roadName} `}
+                </span>
+              </td>
+              <td>{residenceTypeFormat[personalPosts?.residenceType]}</td>
+              <td>{rentTypeFormat[personalPosts?.rentType]}</td>
+              <td>{formatPrice(personalPosts?.roomPrice)}</td>
             </tr>
           ))}
         </tbody>
@@ -89,7 +101,7 @@ const PersonalPosts = () => {
         totalPosts={personalPosts.totalMates}
         onPageChange={page => setPage(page)}
       />
-    </>
+    </div>
   );
 };
 
