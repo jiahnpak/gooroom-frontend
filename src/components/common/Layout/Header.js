@@ -4,7 +4,7 @@ import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import {BrandName} from './styles';
 import Button from 'components/common/Button';
-import {LOGIN, LOGOUT, USERS} from 'constants/path';
+import {LOGIN, LOGOUT, MATES, ROOMS, USERS} from 'constants/path';
 import {useRecoilValue} from 'recoil';
 import {AuthState} from 'stores/AuthState';
 
@@ -31,9 +31,8 @@ const Header = () => {
           <Navbar.Toggle aria-controls="global-navbar" />
           <Navbar.Collapse id="global-navbar">
             <Nav className="ms-auto">
-              <Nav.Link href="/mates">룸메 구하기</Nav.Link>
-              <Nav.Link href="/">방 구하기</Nav.Link>
-              <Nav.Link href="/">커뮤니티</Nav.Link>
+              <Nav.Link href={MATES}>룸메 구하기</Nav.Link>
+              <Nav.Link href={ROOMS}>방 구하기</Nav.Link>
               {auth.authenticated ? (
                 <>
                   <Button variant="secondary" href={LOGOUT} className="mx-2">
