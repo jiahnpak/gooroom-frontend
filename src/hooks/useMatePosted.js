@@ -44,6 +44,9 @@ const useMatePosted = () => {
 
       setMateInfo(prev => data);
     } catch (err) {
+      if (err?.response?.status === CODE.NOT_FOUND) {
+        return CODE.NOT_FOUND;
+      }
       const errorCode = err?.response?.data?.errorCode;
       if (!errorCode) {
         return CODE.UNEXPECTED;
