@@ -25,3 +25,4 @@ export const API_MATES = `${process.env.REACT_APP_API_URL}/mates`;
 export const API_MARK_MATES = `${process.env.REACT_APP_API_URL}/mark`;
 
 export const API_MATES_PERSONAL = `${process.env.REACT_APP_API_URL}/users/mates`;
+export const API_MATES_MARKED = `${process.env.REACT_APP_API_URL}/users/matesmark`;
