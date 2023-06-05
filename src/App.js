@@ -23,6 +23,7 @@ import NotFoundPage from 'pages/NotFoundPage';
 import MateListPage from 'pages/MateListPage';
 import MateFormPage from 'pages/MateFormPage';
 import MatePostedPage from 'pages/MatePostedPage';
+import RoomPage from 'pages/RoomPage';
 
 const App = () => {
   return (
@@ -41,6 +42,7 @@ const App = () => {
                       path={PATH.LOGIN_EMAIL}
                       element={<LoginEmailPage />}
                     />
+                    <Route path={PATH.ROOMS} element={<RoomPage />} />
                     <Route path={PATH.LOGOUT} element={<Logout />} />
                     <Route
                       path={PATH.REDIRECT_URI_KAKAO}
