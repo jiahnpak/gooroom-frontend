@@ -21,8 +21,8 @@ export const sleepingHabitType = {
   placeholder: '이갈이나 코골이가 있어요!',
 };
 
-export const wakeupTime = {
-  name: 'wakeupTime',
+export const wakeupType = {
+  name: 'wakeupType',
   label: '수면 패턴',
   placeholder: '수면 패턴 선택',
   options: [

@@ -1,9 +1,3 @@
-import {useMember} from 'contexts/MemberContext';
-import {useProfileImage} from 'contexts/ProfileImageContext';
-import {useState} from 'react';
-import {useEffect} from 'react';
-import {useNavigate, useParams} from 'react-router-dom';
-import {useLifestyle} from 'contexts/LifestyleContext';
 import {
   StyledLifestyle,
   StyledLifestyleBottom,
@@ -21,34 +15,19 @@ import {
   organizeType,
   sleepingHabitType,
   smokingType,
-  wakeupTime,
+  wakeupType,
 } from 'constants/lifestyleList';
 import Button from 'components/common/Button/Button';
+import {useNavigate} from 'react-router-dom';
+import {USERS_LIFESTYLE} from 'constants/path';
+import {formatAgeGroup} from 'utils/mateUtils';
 
-const Lifestyle = () => {
-  const {nickname} = useParams();
-
-  const member = useMember(nickname); // 닉네임으로 Member 찾기 필요
-  const profileImage = useProfileImage(nickname);
-  const lifestyle = useLifestyle(nickname);
-
-  const loginMember = useMember(); // 현재 로그인 중인 사용자의 정보
-
+const Lifestyle = ({nickname, loginMember, lifestyle, profileImage}) => {
   const navigate = useNavigate();
-
-  const [profile, setProfile] = useState({
-    member: {...member},
-    profileImage: profileImage,
-    lifestyle: {...lifestyle},
-  });
-
-  // 컴포넌트가 마운트될 때 지정된 닉네임을 가진 사용자 생활 패턴을 서버에게 받아온다.
-  useEffect(() => {
-    setProfile({member: {...member}, profileImage, lifestyle: {...lifestyle}});
-  }, [member, profileImage, lifestyle]);
 
   const onClickModifyBtn = () => {
     // "나는 이런 사람이에요!"의 수정 페이지로 이동
+    navigate(`${USERS_LIFESTYLE}`, {state: lifestyle});
   };
 
   return (
@@ -56,26 +35,24 @@ const Lifestyle = () => {
       <StyledLifestyleTop>
         <StyledProfileInfo xs="auto">
           <Col>
-            <Image
-              roundedCircle
-              width="72"
-              height="auto"
-              src={profile.profileImage}
-            />
+            <Image roundedCircle width="72" height="auto" src={profileImage} />
           </Col>
           <Col>
-            <StyledProfileName>{profile.member.name}</StyledProfileName>
+            <StyledProfileName>{lifestyle.name}</StyledProfileName>
             <StyledProfileMeta>
-              {profile.member.gender &&
-                `성별: ${
-                  profile.member.gender === 'MALE'
-                    ? '남자 '
-                    : profile.member.gender === 'FEMALE'
-                    ? '여자 '
-                    : ''
-                }`}{' '}
-              {profile.member.birthyear &&
-                `연령대: ${profile.member.birthyear}`}
+              <span>
+                {lifestyle.gender &&
+                  `성별: ${
+                    lifestyle.gender === 'M'
+                      ? '남자 '
+                      : lifestyle.gender === 'F'
+                      ? '여자 '
+                      : ''
+                  }`}
+              </span>
+              <span>
+                {lifestyle.age && `연령대: ${formatAgeGroup(lifestyle.age)}`}
+              </span>
             </StyledProfileMeta>
           </Col>
           {nickname === loginMember.nickname && (
@@ -87,7 +64,7 @@ const Lifestyle = () => {
           )}
         </StyledProfileInfo>
         <Row xs="auto">
-          <StyledParagraph>{profile.lifestyle.introduce}</StyledParagraph>
+          <StyledParagraph>{lifestyle.introduce}</StyledParagraph>
         </Row>
       </StyledLifestyleTop>
       <StyledLifestyleBottom>
@@ -95,15 +72,15 @@ const Lifestyle = () => {
           <Col>
             <StyledLifestyleTitle>흡연</StyledLifestyleTitle>
             <StyledParagraph>
-              {profile.lifestyle.smokingType && smokingType.placeholder}
+              {lifestyle.smokingType && smokingType.placeholder}
             </StyledParagraph>
           </Col>
           <Col>
             <StyledLifestyleTitle>음주</StyledLifestyleTitle>
             <StyledParagraph>
-              {profile.lifestyle.drinkingType &&
+              {lifestyle.drinkingType &&
                 drinkingType.options.find(
-                  option => option.value === profile.lifestyle.drinkingType,
+                  option => option.value === lifestyle.drinkingType,
                 ).label}
             </StyledParagraph>
           </Col>
@@ -112,28 +89,27 @@ const Lifestyle = () => {
           <Col>
             <StyledLifestyleTitle>잠버릇</StyledLifestyleTitle>
             <StyledParagraph>
-              {profile.lifestyle.sleepingHabitType &&
-                sleepingHabitType.placeholder}
+              {lifestyle.sleepingHabitType && sleepingHabitType.placeholder}
             </StyledParagraph>
             <StyledParagraph>
-              {profile.lifestyle.wakeupTime &&
-                wakeupTime.options.find(
-                  option => option.value === profile.lifestyle.wakeupTime,
+              {lifestyle.wakeupType &&
+                wakeupType.options.find(
+                  option => option.value === lifestyle.wakeupType,
                 ).label}
             </StyledParagraph>
           </Col>
           <Col>
             <StyledLifestyleTitle>청결</StyledLifestyleTitle>
             <StyledParagraph>
-              {profile.lifestyle.organizeType &&
+              {lifestyle.organizeType &&
                 organizeType.options.find(
-                  option => option.value === profile.lifestyle.organizeType,
+                  option => option.value === lifestyle.organizeType,
                 ).label}
             </StyledParagraph>
             <StyledParagraph>
-              {profile.lifestyle.cleanupType &&
+              {lifestyle.cleanupType &&
                 cleanupType.options.find(
-                  option => option.value === profile.lifestyle.cleanupType,
+                  option => option.value === lifestyle.cleanupType,
                 ).label}
             </StyledParagraph>
           </Col>

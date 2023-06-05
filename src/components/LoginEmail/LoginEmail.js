@@ -8,9 +8,10 @@ import {useNavigate} from 'react-router-dom';
 import {yupResolver} from '@hookform/resolvers/yup';
 import {validationSchema} from './validationSchema';
 import {useAlert} from 'hooks/useAlert';
-import {useAuthDispatch} from 'hooks/useAuth';
-import {setRefreshToken} from 'utils/RefreshToken';
 import {SIGNUP} from 'constants/path';
+import CODE from 'constants/errorCode';
+import {useSetRecoilState} from 'recoil';
+import {AuthState} from 'stores/AuthState';
 
 const LoginEmail = ({title}) => {
   // 로그인 폼에서 필드의 값과 유효성 검증을 위해 사용
@@ -22,13 +23,13 @@ const LoginEmail = ({title}) => {
 
   const showAlert = useAlert(); // 알림 창 표시를 위한 훅
 
-  const authDispatch = useAuthDispatch();
+  const setAuth = useSetRecoilState(AuthState);
 
   /**
    * 로그인 폼에서 submit 이벤트가 발생하고 모든 필드가 유효한 경우 수행되는 함수이다.
    * @param {object} data - react-hook-form을 통해 관리하는 필드의 값이다.
    */
-  const onSubmit = data => {
+  const onSubmit = async data => {
     const {email, password} = data;
     const body = JSON.stringify({
       email,
@@ -36,25 +37,35 @@ const LoginEmail = ({title}) => {
     });
 
     try {
-      const response = postLogin(body);
-      const data = JSON.parse(response?.data || '{}');
+      const response = await postLogin(body);
 
-      // response.data가 없는 경우 에러 처리
-      if (data.constructor === Object && Object.keys(data).length === 0) {
-        throw new Error('서버가 불안정합니다. 문제가 계속될 시 문의바랍니다.');
+      const accessToken = response?.headers['authorization'];
+
+      if (!accessToken) {
+        throw new Error('토큰 생성에 실패했습니다.');
       }
 
-      if (!data['errorCode']) {
-        // 에러 코드가 없는 경우, 로그인 성공
-        setRefreshToken(data['Authorization-refresh']);
-        authDispatch({type: 'SET_TOKEN', token: data['Authorization']});
+      setAuth({authenticated: true, accessToken: accessToken});
 
-        return navigate('/');
-      } else {
-        // TODO - 로그인 실패시 오류
-      }
+      return navigate('/');
     } catch (err) {
-      showAlert('danger', '로그인에 실패했습니다. 잠시 후 시도해주세요.', 2000);
+      const errorCode = err?.response?.data?.errorCode;
+
+      switch (errorCode) {
+        case CODE.LOGIN_FAILURE:
+          showAlert(
+            'danger',
+            '이메일 또는 비밀번호를 잘못 입력했습니다.',
+            2000,
+          );
+          break;
+        default: // 기타 에러에 대한 처리
+          showAlert(
+            'danger',
+            '로그인에 실패했습니다. 잠시 후 시도해주세요.',
+            2000,
+          );
+      }
     }
   };
 

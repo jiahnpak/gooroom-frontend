@@ -8,7 +8,7 @@ import {
   nameMin,
   pwdMax,
   pwdMin,
-} from 'constants/validation';
+} from 'constants/memberConstants';
 
 const REGEXP_EMAIL =
   '^[\\w!#$%&’*+\\/=?`{|}~^-]+(?:\\.[\\w!#$%&’*+\\/=?`{|}~^-]+)*@(?:[a-zA-Z\\d-]+\\.)+[a-zA-Z]{2,6}$';
@@ -24,6 +24,7 @@ export const ERRORS = {
   INVALID_NAME: '이름 형식이 올바르지 않습니다.',
   INVALID_PHONENUMBER: '전화번호 형식이 올바르지 않습니다.',
   DUPLICATE_EMAIL: '이미 사용 중인 이메일입니다.',
+  DUPLICATE_NICKNAME: '이미 사용 중인 닉네임입니다.',
   PASSWORD_NOT_MATCH: '비밀번호가 일치하지 않습니다.',
 };
 
@@ -61,7 +62,7 @@ export const validationSchema = yup.object().shape({
   gender: yup // 성별 확인
     .string()
     .required()
-    .oneOf(['MALE', 'FEMALE']),
+    .oneOf(['M', 'F']),
   birthdate: yup // 생년월일 확인
     .date()
     .required()

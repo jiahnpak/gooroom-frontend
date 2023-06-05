@@ -1,11 +1,44 @@
 import Profile from 'components/Profile';
-import useAuthRedirect from 'hooks/useAuthRedirect';
+import Loading from 'components/common/Loading/Loading';
+import CODE from 'constants/errorCode';
+import useMember from 'hooks/useMember';
+import {useEffect} from 'react';
+import {useState} from 'react';
+import UnexpectedPage from './UnexpectedPage';
 
 const ProfilePage = () => {
-  // 인증되지 않은 사용자를 로그인 페이지로 리다이렉트
-  // useAuthRedirect();
+  const [unexpectedError, setUnexpectedError] = useState(false);
+  const [loading, setLoading] = useState(true);
 
-  return <Profile></Profile>;
+  const memberMethods = useMember();
+  const {getMember} = memberMethods;
+
+  useEffect(() => {
+    const getDatas = async () => {
+      const response = await getMember();
+
+      switch (response) {
+        case CODE.UNEXPECTED:
+          setUnexpectedError(true);
+          break;
+        default:
+      }
+
+      setLoading(false);
+    };
+    getDatas();
+  }, []);
+
+  if (unexpectedError) {
+    return <UnexpectedPage />;
+  }
+
+  // 서버에서 데이터를 가져오는 중에는 로딩화면 렌더링
+  if (loading) {
+    return <Loading />;
+  }
+
+  return <Profile memberMethods={memberMethods}></Profile>;
 };
 
 export default ProfilePage;

@@ -7,17 +7,15 @@ import {ERRORS, validationSchema} from './validationSchema';
 import {useNavigate} from 'react-router-dom';
 import {format} from 'date-fns';
 import useAlert from 'hooks/useAlert';
-import {setRefreshToken} from 'utils/RefreshToken';
-import {useAuthDispatch} from 'hooks/useAuth';
-import {USERS_LIFESTYLE} from 'constants/path';
-import errorCode from 'constants/errorCode';
+import {LOGIN_EMAIL} from 'constants/path';
+import CODE from 'constants/errorCode';
 
 const Signup = ({title}) => {
   // 회원가입 폼에서 필드의 값과 유효성 검증을 위해 사용
   const formMethods = useForm({
     resolver: yupResolver(validationSchema),
   });
-  const {setError} = formMethods;
+  const {setError, setFocus} = formMethods;
 
   // 페이지 이동을 위해 사용
   const navigate = useNavigate();
@@ -25,13 +23,11 @@ const Signup = ({title}) => {
   // 알림 창 표시를 위한 훅
   const showAlert = useAlert();
 
-  const authDispatch = useAuthDispatch();
-
   /**
    * 회원가입 폼에서 submit 이벤트가 발생하고 모든 필드가 유효한 경우 수행되는 함수이다.
    * @param {object} data - react-hook-form을 통해 관리하는 필드의 값이다.
    */
-  const onSubmit = data => {
+  const onSubmit = async data => {
     const {email, password, name, nickname, mobile, gender, birthdate} = data;
 
     const body = JSON.stringify({
@@ -42,33 +38,40 @@ const Signup = ({title}) => {
       mobile,
       gender,
       birthyear: format(birthdate, 'yyyy'),
-      birthdat: format(birthdate, 'MM-dd'),
+      birthday: format(birthdate, 'MM-dd'),
     });
 
     try {
-      const response = postSignup(body);
-      const data = JSON.parse(response?.data || '{}');
-
-      // response.data가 없는 경우 에러 처리
-      if (data.constructor === Object && Object.keys(data).length === 0) {
-        throw new Error('서버가 불안정합니다. 문제가 계속될 시 문의바랍니다.');
+      const response = await postSignup(body);
+      if (!response) {
+        throw new Error('서버와 연결이 불안정합니다.');
       }
 
-      if (!data['errorCode']) {
-        // 에러 코드가 없는 경우, 회원가입 성공
-        setRefreshToken(data['Authorization-refresh']);
-        authDispatch({type: 'SET_TOKEN', token: data['Authorization']});
+      showAlert('success', '회원가입에 성공했습니다!', 2000);
 
-        return navigate(USERS_LIFESTYLE);
-      } else if (data['errorCode'] === errorCode.ALREADY_EXIST_USER_EMAIL) {
-        setError('email', {type: 'custom', message: ERRORS.DUPLICATE_EMAIL});
-      }
+      return navigate(LOGIN_EMAIL);
     } catch (err) {
-      showAlert(
-        'danger',
-        '회원가입에 실패했습니다. 잠시 후 시도해주세요.',
-        2000,
-      );
+      const errorCode = err?.response?.data?.errorCode;
+
+      switch (errorCode) {
+        case CODE.ALREADY_EXIST_USER_EMAIL: // 중복된 이메일을 입력할 때의 에러 처리
+          setError('email', {type: 'custom', message: ERRORS.DUPLICATE_EMAIL});
+          setFocus('email');
+          break;
+        case CODE.ALREADY_EXIST_USER_NICKNAME: // 중복된 닉네임을 입력할 때의 에러 처리
+          setError('nickname', {
+            type: 'custom',
+            message: ERRORS.DUPLICATE_NICKNAME,
+          });
+          setFocus('nickname');
+          break;
+        default: // 기타 에러에 대한 처리
+          showAlert(
+            'danger',
+            '회원가입에 실패했습니다. 잠시 후 시도해주세요.',
+            2000,
+          );
+      }
     }
   };
 

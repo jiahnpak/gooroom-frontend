@@ -4,11 +4,12 @@ import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import {BrandName} from './styles';
 import Button from 'components/common/Button';
-import {LOGIN, LOGOUT} from 'constants/path';
-import useAuthState from 'hooks/useAuth';
+import {LOGIN, LOGOUT, MATES, ROOMS, USERS} from 'constants/path';
+import {useRecoilValue} from 'recoil';
+import {AuthState} from 'stores/AuthState';
 
 const Header = () => {
-  const authState = useAuthState();
+  const auth = useRecoilValue(AuthState);
 
   return (
     <header>
@@ -30,16 +31,14 @@ const Header = () => {
           <Navbar.Toggle aria-controls="global-navbar" />
           <Navbar.Collapse id="global-navbar">
             <Nav className="ms-auto">
-              <Nav.Link href="/">룸메 구하기</Nav.Link>
-              <Nav.Link href="/">방 구하기</Nav.Link>
-              <Nav.Link href="/">커뮤니티</Nav.Link>
-              {authState.authenticated ? (
+              <Nav.Link href={MATES}>룸메 구하기</Nav.Link>
+              <Nav.Link href={ROOMS}>방 구하기</Nav.Link>
+              {auth.authenticated ? (
                 <>
-                  <Nav.Link href="/">채팅</Nav.Link>
                   <Button variant="secondary" href={LOGOUT} className="mx-2">
                     로그아웃
                   </Button>
-                  <Button variant="primary" href="/" className="mx-2">
+                  <Button variant="primary" href={USERS} className="mx-2">
                     마이페이지
                   </Button>
                 </>

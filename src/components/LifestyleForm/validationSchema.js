@@ -3,7 +3,7 @@ import {
   smokingType,
   drinkingType,
   sleepingHabitType,
-  wakeupTime,
+  wakeupType,
   organizeType,
   cleanupType,
   introduce,
@@ -22,10 +22,10 @@ export const validationSchema = yup.object().shape({
     .bool()
     .required()
     .oneOf([true, false]),
-  [wakeupTime.name]: yup // 수면 패턴 유효성 정의
+  [wakeupType.name]: yup // 수면 패턴 유효성 정의
     .string()
     .required()
-    .oneOf(wakeupTime.options.map(option => option.value)),
+    .oneOf(wakeupType.options.map(option => option.value)),
   [organizeType.name]: yup // 정리 주기 유효성 정의
     .string()
     .required()

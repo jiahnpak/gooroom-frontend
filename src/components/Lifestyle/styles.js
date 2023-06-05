@@ -1,4 +1,4 @@
-import {Card, Row} from 'react-bootstrap';
+import {Card, Row, Stack} from 'react-bootstrap';
 import styled from 'styled-components';
 
 export const StyledLifestyle = styled(Card)`
@@ -21,16 +21,18 @@ export const StyledProfileInfo = styled(Row)`
   display: flex;
   justify-content: flex-start;
   align-items: center;
-
-  gap: 1.25rem;
 `;
 
-export const StyledProfileName = styled(Row)`
+export const StyledProfileName = styled(Stack)`
   font-size: 1rem;
   color: '#000000';
 `;
 
-export const StyledProfileMeta = styled(Row)`
+export const StyledProfileMeta = styled(Stack)`
+  display: flex;
+  flex-direction: row;
+  gap: 0.5rem;
+
   font-size: 0.75rem;
   color: ${({theme}) => theme.colors.textDefault};
 `;

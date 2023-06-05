@@ -1,6 +1,6 @@
 import {Form} from 'react-bootstrap';
 import Button from 'components/common/Button';
-import {emailMax, pwdMin, pwdMax} from 'constants/validation';
+import {emailMax, pwdMin, pwdMax} from 'constants/memberConstants';
 
 const LoginForm = ({formMethods, onSubmit, onInvalid}) => {
   const {

@@ -29,8 +29,8 @@ const StyledDescription = styled.p`
 const Loading = ({title, description}) => {
   return (
     <StyledLoading>
-      <StyledTitle>{title}</StyledTitle>
-      <StyledDescription>{description}</StyledDescription>
+      {title && <StyledTitle>{title}</StyledTitle>}
+      {description && <StyledDescription>{description}</StyledDescription>}
       <Spinner animation="border" />
     </StyledLoading>
   );

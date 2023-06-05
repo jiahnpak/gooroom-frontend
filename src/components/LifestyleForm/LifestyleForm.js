@@ -5,7 +5,7 @@ import {
   smokingType,
   drinkingType,
   sleepingHabitType,
-  wakeupTime,
+  wakeupType,
   organizeType,
   cleanupType,
   introduce,
@@ -17,13 +17,9 @@ import useInterceptedAxios from 'hooks/useInterceptedAxios';
 import {API_USERS_LIFESTYLE} from 'constants/apiUrls';
 import {useAlert} from 'hooks/useAlert';
 import {useNavigate} from 'react-router-dom';
-import {initialLifestyle, useLifestyle} from 'contexts/LifestyleContext';
-import {useMember} from 'contexts/MemberContext';
+import {USERS_LIFESTYLE} from 'constants/path';
 
-const LifestyleForm = () => {
-  const member = useMember();
-  const lifestyle = useLifestyle(member.nickname);
-
+const LifestyleForm = ({member, lifestyle}) => {
   const {
     register,
     handleSubmit,
@@ -31,13 +27,13 @@ const LifestyleForm = () => {
   } = useForm({
     resolver: yupResolver(validationSchema),
     defaultValues: {
-      [smokingType.name]: lifestyle.smokingType,
-      [drinkingType.name]: lifestyle.drinkingType,
-      [sleepingHabitType.name]: lifestyle.sleepingHabitType,
-      [wakeupTime.name]: lifestyle.wakeupTime,
-      [organizeType.name]: lifestyle.organizeType,
-      [cleanupType.name]: lifestyle.cleanupType,
-      [introduce.name]: lifestyle.introduce,
+      [smokingType.name]: lifestyle?.smokingType,
+      [drinkingType.name]: lifestyle?.drinkingType,
+      [sleepingHabitType.name]: lifestyle?.sleepingHabitType,
+      [wakeupType.name]: lifestyle?.wakeupType,
+      [organizeType.name]: lifestyle?.organizeType,
+      [cleanupType.name]: lifestyle?.cleanupType,
+      [introduce.name]: lifestyle?.introduce,
     },
   });
 
@@ -51,7 +47,8 @@ const LifestyleForm = () => {
 
   const onSubmit = async data => {
     const body = JSON.stringify(data);
-    const method = lifestyle === initialLifestyle ? 'post' : 'patch';
+
+    const method = !!lifestyle ? 'patch' : 'post';
 
     try {
       const response = await jwtAxios({
@@ -59,19 +56,22 @@ const LifestyleForm = () => {
         method: method,
         data: body,
       });
-      const data = JSON.parse(response?.data || '{}');
-
-      // response.data가 없는 경우 에러 처리
-      if (data.constructor === Object && Object.keys(data).length === 0) {
-        throw new Error('서버가 불안정합니다. 문제가 계속될 시 문의바랍니다.');
+      if (!response) {
+        throw new Error('서버와 연결이 불안정합니다.');
       }
 
-      if (!data['errorCode']) {
-        // 에러 코드가 없는 경우, 폼 제출 성공
-        return navigate('/');
-      }
+      return navigate(`${USERS_LIFESTYLE}/${member.nickname}`);
     } catch (err) {
-      showAlert('danger', '잠시 후 다시 시도해주세요.', 2000);
+      const errorCode = err?.response?.data?.errorCode;
+
+      switch (errorCode) {
+        default: // 기타 에러에 대한 처리
+          showAlert(
+            'danger',
+            '제출에 실패했습니다. 잠시 후 시도해주세요.',
+            2000,
+          );
+      }
     }
   };
 
@@ -132,16 +132,16 @@ const LifestyleForm = () => {
                 {...register(sleepingHabitType.name)}
               />
             </Form.Group>
-            <Form.Group className="mb-3" controlId="lifestyleFormWakeupTime">
+            <Form.Group className="mb-3" controlId="lifestyleFormWakeupType">
               <Form.Text className="mb-1" as="label">
-                {wakeupTime.label}
+                {wakeupType.label}
               </Form.Text>
               <Form.Select
-                isInvalid={!!errors[wakeupTime.name]}
-                {...register(wakeupTime.name)}
+                isInvalid={!!errors[wakeupType.name]}
+                {...register(wakeupType.name)}
               >
-                <option value="">{wakeupTime.placeholder}</option>
-                {wakeupTime.options.map(option => (
+                <option value="">{wakeupType.placeholder}</option>
+                {wakeupType.options.map(option => (
                   <option key={option.value} value={option.value}>
                     {option.label}
                   </option>

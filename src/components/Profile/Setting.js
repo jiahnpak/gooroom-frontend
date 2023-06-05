@@ -1,5 +1,5 @@
 import Button from 'components/common/Button/Button';
-import {nameMax, nameMin} from 'constants/validation';
+import {nameMax, nameMin, pwdMax} from 'constants/memberConstants';
 import {Col, Form, Image, Modal, Row} from 'react-bootstrap';
 import {FaRegEdit} from 'react-icons/fa';
 import {useRef} from 'react';
@@ -7,7 +7,7 @@ import useInterceptedAxios from 'hooks/useInterceptedAxios';
 import {useState} from 'react';
 import {useForm} from 'react-hook-form';
 import {yupResolver} from '@hookform/resolvers/yup';
-import {validationSchema} from './validationSchema';
+import {profileSchema, withdrawalSchema} from './validationSchema';
 import {
   StyledDescription,
   StyledForm,
@@ -22,19 +22,29 @@ import useAlert from 'hooks/useAlert';
 import {useNavigate} from 'react-router-dom';
 import {LOGOUT} from 'constants/path';
 
-const Settings = ({profile, setProfile}) => {
+const Settings = ({memberMethods, profileImageMethods}) => {
   const jwtAxios = useInterceptedAxios();
+  const {member, setMember} = memberMethods;
+  const {profileImage, setProfileImage} = profileImageMethods;
 
   const {
-    register,
-    handleSubmit,
-    formState: {errors},
+    register: profileRegister,
+    handleSubmit: handleProfileSubmit,
+    formState: {errors: profileErrors},
   } = useForm({
     defaultValues: {
-      nickname: profile.member.nickname,
-      mobile: profile.member.mobile,
+      nickname: member.nickname,
+      mobile: member.mobile,
     },
-    resolver: yupResolver(validationSchema),
+    resolver: yupResolver(profileSchema),
+  });
+
+  const {
+    register: withdrawalRegister,
+    handleSubmit: handleWithdrawalSubmit,
+    formState: {errors: withdrawalErrors},
+  } = useForm({
+    resolver: yupResolver(withdrawalSchema),
   });
 
   const showAlert = useAlert();
@@ -71,30 +81,29 @@ const Settings = ({profile, setProfile}) => {
     try {
       // 서버에 비동기로 수정 요청을 보낸다.
       const response = await jwtAxios.put(API_USERS, body);
-      const data = JSON.parse(response?.data || '{}');
-
-      // response.data가 없는 경우 에러 처리
-      if (data.constructor === Object && Object.keys(data).length === 0) {
-        throw new Error('서버가 불안정합니다. 문제가 계속될 시 문의바랍니다.');
+      if (!response) {
+        throw new Error('서버와 연결이 불안정합니다.');
       }
 
-      if (!data['errorCode']) {
-        // 에러가 없는 경우 profile 상태를 최신화시킨다.
-        setProfile(prevProfile => ({
-          ...prevProfile,
-          member: {
-            ...prevProfile.member,
-            nickname,
-            mobile,
-          },
-        }));
-      }
+      // 에러가 없는 경우 profile 상태를 최신화시킨다.
+      setMember(prevMember => ({
+        ...prevMember,
+        nickname,
+        mobile,
+      }));
+
+      showAlert('success', '성공적으로 수정하였습니다.', 2000);
     } catch (err) {
-      showAlert(
-        'danger',
-        '연결이 불안정합니다. 잠시 후 다시 시도해주세요.',
-        2000,
-      );
+      const errorCode = err?.response?.data?.errorCode;
+
+      switch (errorCode) {
+        default: // 기타 에러에 대한 처리
+          showAlert(
+            'danger',
+            '서버와 연결이 불안정합니다. 잠시 후 시도해주세요.',
+            2000,
+          );
+      }
     }
   };
 
@@ -123,7 +132,8 @@ const Settings = ({profile, setProfile}) => {
     formData.append('file', file);
 
     try {
-      const method = profile.profileImage === PROFILE_IMAGE ? 'post' : 'patch';
+      const method = profileImage === PROFILE_IMAGE ? 'post' : 'patch';
+      console.log(method);
       // 파일을 서버에 업로드한다.
       const response = await jwtAxios({
         method: method,
@@ -135,53 +145,64 @@ const Settings = ({profile, setProfile}) => {
         },
       });
 
-      const data = JSON.parse(response?.data || '{}');
-
-      // response.data가 없는 경우 에러 처리
-      if (data.constructor === Object && Object.keys(data).length === 0) {
-        throw new Error('서버가 불안정합니다. 문제가 계속될 시 문의바랍니다.');
+      if (!response) {
+        throw new Error('서버와 연결이 불안정합니다.');
       }
 
-      if (!data['errorCode']) {
-        // 에러 코드가 없는 경우 profileImage 상태를 최신화한다.
-        // FileReader 객체를 이용하여 파일 데이터를 base64로 인코딩
-        const reader = new FileReader();
-        reader.readAsDataURL(file);
-        reader.onload = () => {
-          const base64Image = reader.result;
-          // base64 데이터를 state에 저장
-          setProfile(prevProfile => ({
-            ...prevProfile,
-            profileImage: base64Image,
-          }));
-        };
+      // 에러 코드가 없는 경우 profileImage 상태를 최신화한다.
+      // FileReader 객체를 이용하여 파일 데이터를 base64로 인코딩
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => {
+        const base64Image = reader.result;
+        // base64 데이터를 state에 저장
+        setProfileImage(prevProfileImage => ({
+          ...prevProfileImage,
+          profileImage: base64Image,
+        }));
+      };
+
+      showAlert('success', '성공적으로 수정하였습니다.', 2000);
+    } catch (err) {
+      const errorCode = err?.response?.data?.errorCode;
+
+      switch (errorCode) {
+        default: // 기타 에러에 대한 처리
+          showAlert(
+            'danger',
+            '서버와 연결이 불안정합니다. 잠시 후 시도해주세요.',
+            2000,
+          );
       }
-    } catch (err) {}
+    }
   };
 
   /**
    * 계정 삭제 버튼을 누를 시 수행되는 함수이다.
    */
-  const onClickWithdraw = async () => {
+  const onSubmitWithdrawal = async data => {
+    const {checkPassword} = data;
     try {
-      const response = await jwtAxios.delete(API_USERS);
-
-      const data = JSON.parse(response?.data || '{}');
-
-      // response.data가 없는 경우 에러 처리
-      if (data.constructor === Object && Object.keys(data).length === 0) {
-        throw new Error('서버가 불안정합니다. 문제가 계속될 시 문의바랍니다.');
+      const response = await jwtAxios.delete(API_USERS, {
+        data: {checkPassword},
+      });
+      if (!response) {
+        throw new Error('계정 삭제 실패');
       }
 
-      if (!data['errorCode']) {
-        return navigate(LOGOUT);
-      }
+      showAlert('success', '성공적으로 탈퇴되었습니다.', 2000);
+      return navigate(LOGOUT);
     } catch (err) {
-      showAlert(
-        'danger',
-        '연결이 불안정합니다. 잠시 후 다시 시도해주세요.',
-        2000,
-      );
+      const errorCode = err?.response?.data?.errorCode;
+
+      switch (errorCode) {
+        default: // 기타 에러에 대한 처리
+          showAlert(
+            'danger',
+            '연결이 불안정합니다. 잠시 후 다시 시도해주세요.',
+            2000,
+          );
+      }
     }
   };
 
@@ -193,7 +214,11 @@ const Settings = ({profile, setProfile}) => {
           <StyledSettingBody>
             <Row className="gap-5">
               <Col sm={4}>
-                <StyledForm onSubmit={handleSubmit(onSubmit, onInvalid)}>
+                {/* 프로필 수정하기 폼 */}
+                <StyledForm
+                  onSubmit={handleProfileSubmit(onSubmit, onInvalid)}
+                  noValidate
+                >
                   <Form.Group className="mb-5">
                     <Form.Label>닉네임</Form.Label>
                     <Form.Control
@@ -201,8 +226,8 @@ const Settings = ({profile, setProfile}) => {
                       minLength={nameMin}
                       maxLength={nameMax}
                       placeholder="닉네임을 입력해주세요."
-                      isInvalid={!!errors.nickname}
-                      {...register('nickname')}
+                      isInvalid={!!profileErrors.nickname}
+                      {...profileRegister('nickname')}
                     />
                   </Form.Group>
                   <Form.Group className="mb-5">
@@ -226,11 +251,12 @@ const Settings = ({profile, setProfile}) => {
                 </StyledForm>
               </Col>
               <Col sm={4} className="ms-auto">
+                {/* 프로필 사진 변경 폼 */}
                 <Form>
                   <Form.Label className="d-block">프로필 사진</Form.Label>
                   <Form.Group className="position-relative">
                     <Image
-                      src={profile.profileImage}
+                      src={profileImage}
                       width="192"
                       height="auto"
                       roundedCircle
@@ -274,6 +300,7 @@ const Settings = ({profile, setProfile}) => {
             >
               계정 삭제
             </Button>
+            {/* 계정 삭제 모달 */}
             <Modal
               show={withdrawModalShow}
               onHide={closeWithdrawModal}
@@ -283,39 +310,57 @@ const Settings = ({profile, setProfile}) => {
                 <Modal.Title>정말로 삭제하시겠습니까?</Modal.Title>
               </Modal.Header>
               <Modal.Body>
-                <Row>
-                  <Col>
-                    <Button
-                      variant="danger"
-                      size="lg"
-                      onClick={onClickWithdraw}
-                      style={{
-                        fontSize: '1rem',
-                        width: '100%',
-                      }}
-                    >
-                      계정 삭제
-                    </Button>
-                  </Col>
-                  <Col>
-                    <Button
-                      variant="primary"
-                      size="lg"
-                      onClick={closeWithdrawModal}
-                      style={{
-                        fontSize: '1rem',
-                        width: '100%',
-                      }}
-                    >
-                      취소하기
-                    </Button>
-                  </Col>
-                </Row>
+                <Form
+                  onSubmit={handleWithdrawalSubmit(onSubmitWithdrawal)}
+                  noValidate
+                >
+                  <Row className="mb-3">
+                    <Form.Group>
+                      <Form.Label>비밀번호를 입력해주세요</Form.Label>
+                      <Form.Control
+                        type="password"
+                        placeholder="비밀번호를 입력해주세요."
+                        maxLength={pwdMax}
+                        isInvalid={!!withdrawalErrors.checkPassword}
+                        {...withdrawalRegister('checkPassword')}
+                      />
+                    </Form.Group>
+                  </Row>
+                  <Row>
+                    <Col>
+                      <Button
+                        variant="danger"
+                        size="lg"
+                        type="submit"
+                        style={{
+                          fontSize: '1rem',
+                          width: '100%',
+                        }}
+                      >
+                        계정 삭제
+                      </Button>
+                    </Col>
+                    <Col>
+                      <Button
+                        variant="primary"
+                        size="lg"
+                        onClick={closeWithdrawModal}
+                        style={{
+                          fontSize: '1rem',
+                          width: '100%',
+                        }}
+                      >
+                        취소하기
+                      </Button>
+                    </Col>
+                  </Row>
+                </Form>
               </Modal.Body>
             </Modal>
           </StyledSettingBody>
         </StyledSetting>
       </StyledSettings>
+      {/* 전화번호 인증 모달 */}
       <Modal
         show={mobileModalShow}
         onHide={closeMobileModal}
@@ -333,9 +378,9 @@ const Settings = ({profile, setProfile}) => {
                 <Form.Control
                   type="text"
                   placeholder="전화번호를 입력해주세요."
-                  isInvalid={!!errors.mobile}
+                  isInvalid={!!profileErrors.mobile}
                   autoFocus
-                  {...register('mobile')}
+                  {...profileRegister('mobile')}
                 />
               </Col>
               <Col sm="auto">
