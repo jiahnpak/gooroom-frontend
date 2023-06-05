@@ -39,9 +39,10 @@ const LoginEmail = ({title}) => {
     try {
       const response = await postLogin(body);
 
-      const accessToken = response?.headers['authorization'];
+      const accessToken = response?.headers['Authorization'];
 
       if (!accessToken) {
+        console.log(response);
         throw new Error('토큰 생성에 실패했습니다.');
       }
 
