@@ -28,7 +28,7 @@ const LoginNaver = props => {
           state,
         });
 
-        const accessToken = response?.headers['authorization'];
+        const accessToken = response?.headers['Authorization'];
 
         if (!accessToken) {
           throw new Error('토큰 생성에 실패했습니다.');
